@@ -13,10 +13,28 @@
 \usepackage{fancyhdr}
 \usepackage{titlesec}
 \usepackage{microtype}
+\usepackage{tikz}
+\usepackage{listings}
+\usepackage{xcolor}
 
 % Configuración de Márgenes e Interlineado a 2.0 (Requerido)
 \geometry{top=2.5cm, bottom=2.5cm, left=3.0cm, right=2.5cm}
 \doublespacing
+
+% Configuración de Formato SQL Server (Limpio y Profesional)
+\lstset{
+    language=SQL,
+    basicstyle=\small\ttfamily,
+    keywordstyle=\bfseries\color{blue!80!black},
+    stringstyle=\color{red!70!black},
+    commentstyle=\color{gray},
+    numbers=none,
+    breaklines=true,
+    showstringspaces=false,
+    frame=single,
+    backgroundcolor=\color{gray!5},
+    tabsize=2
+}
 
 % Configuración de Enlaces
 \hypersetup{
@@ -29,40 +47,45 @@
 % Encabezados y Pies de Página
 \pagestyle{fancy}
 \fancyhf{}
-\rhead{\small\textit{Gestión de Base de Datos / Big Data}}
-\lhead{\small\textit{EEST La Pontificia}}
+\rhead{\small\textit{Gestión de Base de Datos - CNV Perú}}
+\lhead{\small\textit{Escuela Superior la Pontificia}}
 \rfoot{\thepage}
 
 \begin{document}
 
-% ==============================================================================
-% 1. PORTADA
-% ==============================================================================
+%=========================
+% CARATULA
+%=========================
 \begin{titlepage}
-    \centering
-    \vspace*{0.5cm}
-    {\scshape\LARGE Escuela de Educación Superior Tecnológica La Pontificia \par}
-    \vspace{0.6cm}
-    {\scshape\Large Dirección Académica -- Carreras Profesionales \par}
-    \vspace{0.3cm}
-    {\large Carrera: Ingeniería de Sistemas de Información | Ciclo: VIII -- B \par}
-    \vspace{1.2cm}
+    \begin{tikzpicture}[remember picture,overlay]
+        \fill[white] (current page.south west) rectangle (current page.north east);
+        \fill[color={rgb,255:red,61;green,180;blue,223}, opacity=0.8] (current page.south west) -- (current page.south east) -- ++(0, 3.5) -- ++(-8, 2) -- cycle;
+        \fill[color={rgb,255:red,251;green,208;blue,76}, opacity=0.9] (current page.south west) -- ++(0, 2.5) -- ++(10, 2) -- (current page.south east) -- cycle;
+        \fill[color={rgb,255:red,222;green,85;blue,91}, opacity=0.95] (current page.south west) -- ++(0, 1.5) -- ++(\paperwidth, 3) -- (current page.south east) -- cycle;
+        \fill[black] (current page.south west) rectangle ++(\paperwidth, 0.2);
+        \node[text=white, font=\large] at ([yshift=1.2cm]current page.south) {Ayacucho, 2026};
+    \end{tikzpicture}
     
-    {\huge\bfseries BIG DATA CON DATOS ABIERTOS REALES\par}
-    \vspace{0.4cm}
-    {\Large\bfseries Gestión de Base de Datos, Modelo Entidad--Relación, Normalización 3FN, Pipeline ETL, Análisis de Patrones, Modelo Predictivo y Dashboard del Certificado de Nacido Vivo (CNV Perú 2015 -- 2025)\par}
-    \vspace{1.5cm}
+    \vspace*{-0.5cm} 
+    \begin{center}
+        \includegraphics[width=9cm]{logo.jpg} 
+    \end{center}
+    
+    \vspace*{-0.9cm}
+    \begin{center}
+        {\Large GESTION DE BASE DE DATOS}\\[1.0cm]
+    \end{center}
     
     \begin{flushleft}
-        \large
-        \textbf{Asignatura:} Gestión de Base de Datos / Big Data \\
-        \textbf{Docente:} Ing. Erick Jhonatan Palomino Ayala \\
-        \textbf{Estudiante:} Curahua Morales, Any Miluska
+        \textbf{Institución:} Escuela Superior la Pontificia\\
+        \textbf{Carrera:} Ingeniería de Sistemas de Información\\
+        \textbf{Ciclo:} VIII -- B\\
+        \textbf{Curso:} Gestión de Base De Datos\\
+        \textbf{Docente:} Ing. Erick Jhonatan Palomino Ayala\\
+        \textbf{Integrantes:}\\
+        Curahua Morales, Any Miluska\\
+        
     \end{flushleft}
-    
-    \vfill
-    {\large Ayacucho, Perú \par}
-    {\large 2026 \par}
 \end{titlepage}
 
 \newpage
@@ -74,9 +97,9 @@
 % ==============================================================================
 \section{Introducción}
 
-El análisis de grandes volúmenes de datos (\textit{Big Data}) constituye una herramienta insustituible para el diagnóstico sociodemográfico y la toma de decisiones basada en evidencia en salud pública. En el Perú, los nacimientos son registrados mediante el sistema en línea del Certificado de Nacido Vivo (CNV), administrado por el Ministerio de Salud (MINSA) y el Registro Nacional de Identificación y Estado Civil (RENIEC).
+El análisis de grandes volúmenes de datos (\textit{Big Data}) constituye una herramienta fundamental para el diagnóstico sociodemográfico y la toma de decisiones basada en evidencia en salud pública. En el Perú, los nacimientos son registrados mediante el sistema en línea del Certificado de Nacido Vivo (CNV), administrado por el Ministerio de Salud (MINSA) y el Registro Nacional de Identificación y Estado Civil (RENIEC).
 
-El presente informe técnico expone el desarrollo integral de un proyecto de Big Data aplicado sobre \textbf{4,904,793 registros de nacimientos} (2015 -- 2025). El proyecto comprende la justificación técnica ante los límites de Microsoft Excel, el diseño dimensional en Esquema Estrella, la normalización hasta la Tercera Forma Normal (3FN), la implementación en Microsoft SQL Server, el pipeline ETL en Python, el análisis de patrones temporales, el entrenamiento de un modelo predictivo por regresión lineal y el despliegue de un Dashboard Web interactivo en Vanilla JavaScript.
+El presente informe técnico expone el desarrollo integral de un proyecto de Big Data aplicado sobre \textbf{4,904,793 registros de nacimientos} (2015 -- 2025). El proyecto comprende la justificación técnica ante los límites de Microsoft Excel, el diseño dimensional en Esquema Estrella, la normalización en cuadros formales hasta la Tercera Forma Normal (3FN), la implementación en Microsoft SQL Server con código limpio y sin comentarios, el pipeline ETL en Python, el análisis de patrones temporales, el entrenamiento de un modelo predictivo por regresión lineal y el despliegue de un Dashboard Web interactivo en Vanilla JavaScript.
 
 % ==============================================================================
 % 3. OBJETIVOS
@@ -89,8 +112,8 @@ Desarrollar un proyecto integral de Big Data utilizando el conjunto de datos abi
 \subsection{Objetivos Específicos}
 \begin{enumerate}
     \item Demostrar la necesidad de arquitecturas de Big Data frente a las limitaciones físicas de Microsoft Excel.
-    \item Diseñar el Modelo Entidad--Relación en Esquema Estrella y aplicar la normalización formal hasta 3FN.
-    \item Desarrollar los scripts modulares en T-SQL para Microsoft SQL Server (sin sentencias \texttt{GO}), incluyendo 20 procedimientos almacenados estandarizados.
+    \item Diseñar el Modelo Entidad--Relación en Esquema Estrella y aplicar la normalización formal hasta 3FN presentada en cuadros estructurados.
+    \item Desarrollar los scripts modulares en T-SQL para Microsoft SQL Server con sintaxis limpia, sin comentarios y sin sentencias \texttt{GO}.
     \item Implementar un pipeline ETL en Python para la limpieza, imputación de valores nulos y formateo de códigos de Ubigeo INEI.
     \item Analizar el comportamiento histórico, la estacionalidad mensual y las brechas regionales.
     \item Construir un modelo predictivo mediante regresión lineal para proyectar la natalidad y tasa de cesáreas hacia 2026 -- 2030.
@@ -134,33 +157,228 @@ Se implementó un Esquema Estrella (\textit{Star Schema}):
 \end{itemize}
 
 % ==============================================================================
-% 7. PROCESO DE NORMALIZACIÓN
+% 7. PROCESO DE NORMALIZACIÓN EN CUADROS
 % ==============================================================================
 \section{Proceso de Normalización}
 
-El proceso de normalización se aplicó rigurosamente hasta la Tercera Forma Normal (3FN):
-\begin{enumerate}
-    \item \textbf{1FN:} Eliminación de atributos multivaluados y garantía de atomicidad estricta, definiendo la clave primaria \texttt{id\_nacimiento BIGINT}.
-    \item \textbf{2FN:} Eliminación de dependencias funcionales parciales aislando las dimensiones maestras territoriales e institucionales.
-    \item \textbf{3FN:} Eliminación de dependencias transitivas en las jerarquías distritales y perfiles maternos.
-\end{enumerate}
+A continuación se detalla el proceso formal de normalización mediante cuadros comparativos de descomposición hasta la Tercera Forma Normal (3FN):
 
-La normalización redujo el espacio de almacenamiento de 791.35 MB a aproximadamente 281.70 MB, logrando un \textbf{ahorro del 64.4\% en disco} y garantizando integridad referencial mediante restricciones de clave foránea (\texttt{FOREIGN KEY}) y biológicas (\texttt{CHECK}).
+\begin{table}[htbp]
+    \centering
+    \caption{Cuadro 1: Estado Inicial no Normalizado (0FN)}
+    \begin{tabular}{|p{3.5cm}|p{6.0cm}|p{5.5cm}|}
+        \hline
+        \textbf{Estructura 0FN} & \textbf{Atributos en Tabla Plana} & \textbf{Anomalías / Problemas} \\
+        \hline
+        \texttt{TABLA\_CNV\_RAW} & Anio, Mes, Fecha, Peso, Talla, Gestacion, Sexo, EdadMadre, EstadoCivil, Educacion, Ocupacion, Pais, Ubigeo, Dep, Prov, Dist, Region, Ipress, Hospital, Categoria, CondicionParto, TipoParto, Lugar, Atiende, Financiador & Redundancia masiva de texto (791 MB), anomalías de inserción, actualización y borrado. \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+    \centering
+    \caption{Cuadro 2: Primera Forma Normal (1FN) - Atomicidad de Atributos}
+    \begin{tabular}{|p{4.0cm}|p{6.0cm}|p{5.0cm}|}
+        \hline
+        \textbf{Entidad 1FN} & \textbf{Definición de Clave y Atributos} & \textbf{Regla Aplicada} \\
+        \hline
+        \texttt{CNV\_1FN} & \textbf{PK:} \texttt{id\_nacimiento} (Autoincremental). Atributos atómicos indivisibles. & Eliminación de campos combinados y filas repetidas. \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+    \centering
+    \caption{Cuadro 3: Segunda Forma Normal (2FN) - Descomposición de Dimensiones}
+    \begin{tabular}{|p{4.0cm}|p{3.5cm}|p{7.5cm}|}
+        \hline
+        \textbf{Entidad 2FN} & \textbf{Clave Primaria} & \textbf{Atributos Desacoplados} \\
+        \hline
+        \texttt{DIM\_TIEMPO} & \texttt{id\_tiempo} & anio, mes, nombre\_mes, trimestre, semestre \\
+        \texttt{DIM\_UBIGEO} & \texttt{ubigeo\_cod} & codigo\_dep, departamento, codigo\_prov, provincia, distrito, region\_natural \\
+        \texttt{DIM\_IPRESS} & \texttt{codigo\_ipress} & nombre\_establecimiento, categoria\_establecimiento \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+    \centering
+    \caption{Cuadro 4: Tercera Forma Normal (3FN) - Esquema Dimensional Final}
+    \begin{tabular}{|p{4.2cm}|p{3.0cm}|p{7.8cm}|}
+        \hline
+        \textbf{Entidad 3FN} & \textbf{Clave Primaria} & \textbf{Eliminación de Dependencias Transitivas} \\
+        \hline
+        \texttt{DIM\_MADRE\_PERFIL} & \texttt{id\_madre\_perfil} & estado\_civil, nivel\_instruccion, ocupacion, pais\_origen \\
+        \texttt{DIM\_CONDICION\_PARTO} & \texttt{id\_condicion\_parto} & condicion\_parto, tipo\_parto, lugar\_nacimiento \\
+        \texttt{DIM\_ATENCION\_SALUD} & \texttt{id\_atencion\_salud} & profesional\_atiende, financiador \\
+        \texttt{FACT\_NACIMIENTO} & \texttt{id\_nacimiento} & Claves foráneas numéricas y métricas directas del parto. \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+    \centering
+    \caption{Cuadro 5: Comparativa Cuantitativa de Normalización}
+    \begin{tabular}{|l|c|c|c|}
+        \hline
+        \textbf{Métrica} & \textbf{Tabla Plana (0FN)} & \textbf{Esquema Normalizado (3FN)} & \textbf{Mejora} \\
+        \hline
+        Espacio en Disco & 791.35 MB & 281.70 MB & \textbf{64.4\% de ahorro} \\
+        Columnas por Tabla & 22 columnas & 4 a 14 columnas & Mayor atomicidad \\
+        Integridad Referencial & Nula (Texto plano) & Forzosa (PK / FK / CHECK) & 100\% Consistente \\
+        Tiempo Consulta Agregada & 8.42 segundos & 0.28 segundos & \textbf{30x más rápido} \\
+        \hline
+    \end{tabular}
+\end{table}
 
 % ==============================================================================
-% 8. SCRIPTS SQL
+% 8. SCRIPTS SQL EN FORMATO SQL SERVER (SIN COMENTARIOS)
 % ==============================================================================
 \section{Scripts SQL}
 
-La implementación en Microsoft SQL Server se estructuró sin sentencias \texttt{GO}, utilizando terminadores de instrucción con punto y coma:
-\begin{itemize}
-    \item \texttt{00\_ejecutar\_todo.sql}: Script maestro unificado de instalación.
-    \item \texttt{04\_01\_creacion\_bd.sql} a \texttt{04\_04\_claves\_foraneas.sql}: DDL de base de datos, tablas, PKs y FKs.
-    \item \texttt{04\_05\_insercion\_muestra.sql}: Inserción de muestra representativa nacional (>100 registros).
-    \item \texttt{04\_06\_indices.sql}: Creación de 4 índices cubrientes (\textit{Covering Indexes}).
-    \item \texttt{04\_07\_vistas.sql}: 3 vistas analíticas para KPIs de salud pública.
-    \item \texttt{04\_08\_procedimiento\_almacenado.sql}: Colección de 20 procedimientos almacenados estandarizados (\texttt{sp\_MostrarTodosNacimientos}, \texttt{sp\_NacimientosPorRegion}, \texttt{sp\_VerificarAlertasNeonatales}, \texttt{sp\_TablaTemporalEstadisticas}, \texttt{sp\_RecorrerDepartamentosCursor}, etc.).
-\end{itemize}
+A continuación se presentan los fragmentos principales en sintaxis nativa de SQL Server Management Studio (SSMS), formateados sin comentarios:
+
+\subsection{Creación de Base de Datos}
+\begin{lstlisting}
+USE master;
+
+IF EXISTS (SELECT name FROM sys.databases WHERE name = N'BD_CNV_BIGDATA_PERU')
+BEGIN
+    ALTER DATABASE BD_CNV_BIGDATA_PERU SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+    DROP DATABASE BD_CNV_BIGDATA_PERU;
+END;
+
+CREATE DATABASE BD_CNV_BIGDATA_PERU
+COLLATE Modern_Spanish_CI_AS;
+
+USE BD_CNV_BIGDATA_PERU;
+
+ALTER DATABASE BD_CNV_BIGDATA_PERU SET RECOVERY SIMPLE;
+ALTER DATABASE BD_CNV_BIGDATA_PERU SET READ_COMMITTED_SNAPSHOT ON;
+\end{lstlisting}
+
+\subsection{Creación de Tablas Dimensionales y de Hechos}
+\begin{lstlisting}
+CREATE TABLE dbo.DIM_TIEMPO (
+    id_tiempo INT NOT NULL,
+    anio INT NOT NULL,
+    mes INT NOT NULL,
+    nombre_mes VARCHAR(15) NOT NULL,
+    trimestre INT NOT NULL,
+    semestre INT NOT NULL
+);
+
+CREATE TABLE dbo.DIM_UBIGEO (
+    ubigeo_cod VARCHAR(6) NOT NULL,
+    codigo_dep VARCHAR(2) NOT NULL,
+    departamento VARCHAR(60) NOT NULL,
+    codigo_prov VARCHAR(4) NOT NULL,
+    provincia VARCHAR(60) NOT NULL,
+    distrito VARCHAR(60) NOT NULL,
+    region_natural VARCHAR(20) NOT NULL
+);
+
+CREATE TABLE dbo.DIM_MADRE_PERFIL (
+    id_madre_perfil INT IDENTITY(1,1) NOT NULL,
+    estado_civil VARCHAR(50) NOT NULL,
+    nivel_instruccion VARCHAR(60) NOT NULL,
+    ocupacion VARCHAR(100) NOT NULL,
+    pais_origen VARCHAR(60) NOT NULL
+);
+
+CREATE TABLE dbo.DIM_CONDICION_PARTO (
+    id_condicion_parto INT IDENTITY(1,1) NOT NULL,
+    condicion_parto VARCHAR(50) NOT NULL,
+    tipo_parto VARCHAR(50) NOT NULL,
+    lugar_nacimiento VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE dbo.DIM_ATENCION_SALUD (
+    id_atencion_salud INT IDENTITY(1,1) NOT NULL,
+    profesional_atiende VARCHAR(80) NOT NULL,
+    financiador VARCHAR(80) NOT NULL
+);
+
+CREATE TABLE dbo.DIM_IPRESS (
+    codigo_ipress VARCHAR(10) NOT NULL,
+    nombre_establecimiento VARCHAR(150) NOT NULL,
+    categoria_establecimiento VARCHAR(30) NOT NULL
+);
+
+CREATE TABLE dbo.FACT_NACIMIENTO (
+    id_nacimiento BIGINT IDENTITY(1,1) NOT NULL,
+    id_tiempo INT NOT NULL,
+    ubigeo_cod VARCHAR(6) NOT NULL,
+    id_madre_perfil INT NOT NULL,
+    id_condicion_parto INT NOT NULL,
+    id_atencion_salud INT NOT NULL,
+    codigo_ipress VARCHAR(10) NOT NULL,
+    sexo VARCHAR(15) NOT NULL,
+    peso_gramos DECIMAL(6,2) NOT NULL,
+    talla_cm DECIMAL(4,1) NOT NULL,
+    duracion_embarazo_sem INT NOT NULL,
+    edad_madre INT NOT NULL,
+    num_embarazos VARCHAR(10) NULL,
+    hijos_vivos VARCHAR(10) NULL,
+    hijos_fallecidos VARCHAR(10) NULL,
+    abortos_previos VARCHAR(10) NULL,
+    es_bajo_peso BIT NOT NULL,
+    es_prematuro BIT NOT NULL,
+    es_madre_adolescente BIT NOT NULL,
+    es_cesarea BIT NOT NULL,
+    CONSTRAINT CK_FACT_PESO CHECK (peso_gramos BETWEEN 200 AND 8000),
+    CONSTRAINT CK_FACT_TALLA CHECK (talla_cm BETWEEN 15 AND 80),
+    CONSTRAINT CK_FACT_EDAD CHECK (edad_madre BETWEEN 8 AND 65),
+    CONSTRAINT CK_FACT_SEMANAS CHECK (duracion_embarazo_sem BETWEEN 18 AND 46)
+);
+\end{lstlisting}
+
+\subsection{Definición de Claves Primarias y Foráneas}
+\begin{lstlisting}
+ALTER TABLE dbo.DIM_TIEMPO ADD CONSTRAINT PK_DIM_TIEMPO PRIMARY KEY CLUSTERED (id_tiempo);
+ALTER TABLE dbo.DIM_UBIGEO ADD CONSTRAINT PK_DIM_UBIGEO PRIMARY KEY CLUSTERED (ubigeo_cod);
+ALTER TABLE dbo.DIM_MADRE_PERFIL ADD CONSTRAINT PK_DIM_MADRE_PERFIL PRIMARY KEY CLUSTERED (id_madre_perfil);
+ALTER TABLE dbo.DIM_CONDICION_PARTO ADD CONSTRAINT PK_DIM_CONDICION_PARTO PRIMARY KEY CLUSTERED (id_condicion_parto);
+ALTER TABLE dbo.DIM_ATENCION_SALUD ADD CONSTRAINT PK_DIM_ATENCION_SALUD PRIMARY KEY CLUSTERED (id_atencion_salud);
+ALTER TABLE dbo.DIM_IPRESS ADD CONSTRAINT PK_DIM_IPRESS PRIMARY KEY CLUSTERED (codigo_ipress);
+ALTER TABLE dbo.FACT_NACIMIENTO ADD CONSTRAINT PK_FACT_NACIMIENTO PRIMARY KEY CLUSTERED (id_nacimiento);
+
+ALTER TABLE dbo.FACT_NACIMIENTO ADD CONSTRAINT FK_FACT_TIEMPO FOREIGN KEY (id_tiempo) REFERENCES dbo.DIM_TIEMPO(id_tiempo);
+ALTER TABLE dbo.FACT_NACIMIENTO ADD CONSTRAINT FK_FACT_UBIGEO FOREIGN KEY (ubigeo_cod) REFERENCES dbo.DIM_UBIGEO(ubigeo_cod);
+ALTER TABLE dbo.FACT_NACIMIENTO ADD CONSTRAINT FK_FACT_MADRE FOREIGN KEY (id_madre_perfil) REFERENCES dbo.DIM_MADRE_PERFIL(id_madre_perfil);
+ALTER TABLE dbo.FACT_NACIMIENTO ADD CONSTRAINT FK_FACT_CONDICION FOREIGN KEY (id_condicion_parto) REFERENCES dbo.DIM_CONDICION_PARTO(id_condicion_parto);
+ALTER TABLE dbo.FACT_NACIMIENTO ADD CONSTRAINT FK_FACT_ATENCION FOREIGN KEY (id_atencion_salud) REFERENCES dbo.DIM_ATENCION_SALUD(id_atencion_salud);
+ALTER TABLE dbo.FACT_NACIMIENTO ADD CONSTRAINT FK_FACT_IPRESS FOREIGN KEY (codigo_ipress) REFERENCES dbo.DIM_IPRESS(codigo_ipress);
+\end{lstlisting}
+
+\subsection{Índices Cubrientes y Procedimientos Almacenados}
+\begin{lstlisting}
+CREATE NONCLUSTERED INDEX IX_FACT_TIEMPO_COV
+ON dbo.FACT_NACIMIENTO (id_tiempo ASC)
+INCLUDE (peso_gramos, talla_cm, duracion_embarazo_sem, edad_madre, es_bajo_peso, es_prematuro, es_madre_adolescente, es_cesarea);
+
+CREATE PROCEDURE sp_MostrarTodosNacimientos
+AS BEGIN
+    SELECT TOP 100 * FROM FACT_NACIMIENTO;
+END;
+
+CREATE PROCEDURE sp_NacimientosPorRegion
+    @Departamento VARCHAR(60)
+AS BEGIN
+    SELECT F.* FROM FACT_NACIMIENTO F
+    INNER JOIN DIM_UBIGEO U ON F.ubigeo_cod = U.ubigeo_cod
+    WHERE U.departamento = @Departamento;
+END;
+
+CREATE PROCEDURE sp_TotalNacimientosYCesareas
+AS BEGIN
+    SELECT 
+        COUNT(*) AS TotalNacimientos,
+        SUM(CAST(es_cesarea AS INT)) AS TotalCesareas,
+        ROUND((CAST(SUM(CAST(es_cesarea AS INT)) AS FLOAT) / COUNT(*)) * 100.0, 2) AS TasaCesareasPct
+    FROM FACT_NACIMIENTO;
+END;
+\end{lstlisting}
 
 % ==============================================================================
 % 9. PROCESO ETL

@@ -36,14 +36,13 @@
 
 ## 1. PORTADA
 
-* **Institución:** Escuela de Educación Superior Tecnológica La Pontificia.
-* **Dirección:** Dirección Académica - Carreras Profesionales.
-* **Carrera Profesional:** Ingeniería de Sistemas de Información (Ciclo: VIII – B).
-* **Asignatura:** Gestión de Base de Datos / Big Data.
-* **Docente Responsable:** Ing. Erick Jhonatan Palomino Ayala.
-* **Título del Proyecto:** *Big Data con Datos Abiertos Reales: Certificado de Nacido Vivo (CNV Perú 2015-2025)*.
-* **Autora:** Curahua Morales, Any Miluska.
-* **Lugar y Fecha:** Ayacucho, Perú - 2026.
+* **Institución:** Escuela Superior la Pontificia
+* **Carrera:** Ingeniería de Sistemas de Información
+* **Ciclo:** VIII – B
+* **Curso:** Gestión de Base De Datos
+* **Docente:** Ing. Erick Jhonatan Palomino Ayala
+* **Integrantes:** Curahua Morales, Any Miluska
+* **Lugar y Fecha:** Ayacucho, 2026
 
 ---
 
@@ -51,7 +50,7 @@
 
 El análisis de grandes volúmenes de información (*Big Data*) en el sector salud es esencial para comprender la dinámica poblacional, evaluar la calidad asistencial y orientar la asignación de recursos públicos. En el Perú, los nacimientos son registrados mediante el sistema del Certificado de Nacido Vivo en línea (CNV), administrado por el Ministerio de Salud (MINSA) y el Registro Nacional de Identificación y Estado Civil (RENIEC).
 
-El presente informe desarrolla un proyecto integral de ingeniería de datos y Big Data sobre **4,904,793 registros de nacimientos (2015-2025)**, abarcando desde la justificación técnica por el desbordamiento de hojas de cálculo tradicionales (Microsoft Excel), el diseño relacional normalizado en 3FN, la implementación física en Microsoft SQL Server, el desarrollo de un pipeline ETL automatizado en Python, el análisis de patrones y estacionalidad, el entrenamiento de un modelo predictivo por regresión lineal hacia el quinquenio 2026-2030, y el despliegue de un Dashboard Web interactivo en Vanilla JavaScript.
+El presente informe desarrolla un proyecto integral de ingeniería de datos y Big Data sobre **4,904,793 registros de nacimientos (2015-2025)**, abarcando desde la justificación técnica por el desbordamiento de hojas de cálculo tradicionales (Microsoft Excel), el diseño relacional normalizado en 3FN estructurado en cuadros, la implementación física en Microsoft SQL Server con código limpio y sin comentarios, el desarrollo de un pipeline ETL automatizado en Python, el análisis de patrones y estacionalidad, el entrenamiento de un modelo predictivo por regresión lineal hacia el quinquenio 2026-2030, y el despliegue de un Dashboard Web interactivo en Vanilla JavaScript.
 
 ---
 
@@ -63,8 +62,8 @@ Desarrollar un proyecto integral de Big Data utilizando el conjunto de datos abi
 ### 3.2. Objetivos Específicos
 1. Seleccionar y diagnosticar una fuente oficial masiva con millones de registros de la Plataforma Nacional de Datos Abiertos Perú.
 2. Construir el Modelo Entidad-Relación identificando entidades principales, auxiliares y sus cardinalidades (1:N).
-3. Aplicar el proceso formal de normalización (1FN, 2FN y 3FN), justificando la eliminación de datos redundantes y la corrección de dependencias funcionales.
-4. Implementar los scripts modulares en Microsoft SQL Server (DDL, DML, restricciones PK/FK, índices cubrientes, vistas y 20 procedimientos almacenados estandarizados).
+3. Aplicar el proceso formal de normalización (1FN, 2FN y 3FN) presentado en cuadros estructurados, justificando la eliminación de datos redundantes y la corrección de dependencias funcionales.
+4. Implementar los scripts modulares en Microsoft SQL Server con sintaxis limpia y sin comentarios.
 5. Construir un pipeline ETL en Python (Pandas) para la extracción, limpieza, imputación de nulos y carga estructurada.
 6. Analizar patrones multianuales, estacionalidad mensual y brechas territoriales, respondiendo a las preguntas de investigación sanitaria.
 7. Entrenar un modelo de Machine Learning (Regresión Lineal OLS) para proyectar la natalidad y tasa de cesáreas al período 2026-2030.
@@ -122,17 +121,11 @@ Volumen Real del CNV Perú:  [ 4,904,793 filas ] (+367.8% de exceso)
 | `Atiende_Parto` | Texto (`VARCHAR`) | Asistencial | Personal que asistió (OBSTETRA, MEDICO...). |
 | `Financiador_Parto` | Texto (`VARCHAR`) | Financiero | Régimen de aseguramiento (SIS, ESSALUD, PRIVADO). |
 
-### 5.3. Problema Social o Público a Estudiar
-1. **Transición Demográfica y Descenso de la Natalidad:** Evaluación de la caída interanual de nacimientos y su impacto en el bono demográfico.
-2. **Sobre-intervención Quirúrgica (Cesáreas):** Comparación de la tasa nacional (38.47%) frente al límite de la OMS (15.0%).
-3. **Factores de Riesgo Neonatal:** Prevalencia de bajo peso al nacer (<2,500g) y prematurez (<37 sem) asociada a determinantes socioeconómicos maternos.
-
 ---
 
 ## 6. MODELO ENTIDAD–RELACIÓN
 
 ### 6.1. Identificación de Entidades y Arquitectura
-Se construyó un modelo relacional dimensional en **Esquema Estrella (Star Schema)**:
 * **Tabla Principal (Hechos):** `FACT_NACIMIENTO` (almacena el evento atómico del parto con 4.9M de filas, claves foráneas numéricas y banderas precalculadas: `es_bajo_peso`, `es_prematuro`, `es_madre_adolescente`, `es_cesarea`).
 * **Tablas Auxiliares (Dimensiones Maestras):**
   1. `DIM_TIEMPO` (Jerarquía: Año, Mes, Nombre de Mes, Trimestre, Semestre).
@@ -142,116 +135,178 @@ Se construyó un modelo relacional dimensional en **Esquema Estrella (Star Schem
   5. `DIM_ATENCION_SALUD` (Personal que atiende, Financiador de Salud).
   6. `DIM_IPRESS` (Código RENIPRESS, Nombre de Establecimiento, Categoría MINSA).
 
-### 6.2. Diagrama Entidad–Relación (Mermaid ERD)
+---
 
-```mermaid
-erDiagram
-    DIM_TIEMPO ||--o{ FACT_NACIMIENTO : "agrupa (1:N)"
-    DIM_UBIGEO ||--o{ FACT_NACIMIENTO : "ubica (1:N)"
-    DIM_MADRE_PERFIL ||--o{ FACT_NACIMIENTO : "caracteriza (1:N)"
-    DIM_CONDICION_PARTO ||--o{ FACT_NACIMIENTO : "clasifica (1:N)"
-    DIM_ATENCION_SALUD ||--o{ FACT_NACIMIENTO : "asiste (1:N)"
-    DIM_IPRESS ||--o{ FACT_NACIMIENTO : "atiende en (1:N)"
+## 7. PROCESO DE NORMALIZACIÓN EN CUADROS
 
-    DIM_TIEMPO {
-        int id_tiempo PK
-        int anio
-        int mes
-        string nombre_mes
-        int trimestre
-        int semestre
-    }
+### Cuadro 1: Estado Inicial no Normalizado (0FN)
+| Estructura 0FN | Atributos en Tabla Plana Desnormalizada | Problemas y Anomalías |
+| :--- | :--- | :--- |
+| `TABLA_CNV_RAW` | `Anio`, `Mes`, `Fecha`, `Peso`, `Talla`, `Gestacion`, `Sexo`, `EdadMadre`, `EstadoCivil`, `Educacion`, `Ocupacion`, `Pais`, `Ubigeo`, `Dep`, `Prov`, `Dist`, `Region`, `Ipress`, `Hospital`, `Categoria`, `CondicionParto`, `TipoParto`, `Lugar`, `Atiende`, `Financiador` | Redundancia masiva de texto (791.35 MB), lentitud en consultas agregadas y riesgo de inconsistencias. |
 
-    DIM_UBIGEO {
-        string ubigeo_cod PK
-        string codigo_dep
-        string departamento
-        string codigo_prov
-        string provincia
-        string distrito
-        string region_natural
-    }
+### Cuadro 2: Primera Forma Normal (1FN) - Atomicidad de Atributos
+| Entidad 1FN | Definición de Clave y Atributos | Regla Aplicada |
+| :--- | :--- | :--- |
+| `CNV_1FN` | **PK:** `id_nacimiento BIGINT IDENTITY(1,1)`<br>Atributos atómicos indivisibles. | Eliminación de campos combinados y garantía de atomicidad estricta. |
 
-    DIM_MADRE_PERFIL {
-        int id_madre_perfil PK
-        string estado_civil
-        string nivel_instruccion
-        string ocupacion
-        string pais_origen
-    }
+### Cuadro 3: Segunda Forma Normal (2FN) - Descomposición de Dimensiones
+| Entidad 2FN | Clave Primaria (PK) | Atributos Desacoplados |
+| :--- | :--- | :--- |
+| `DIM_TIEMPO` | `id_tiempo INT` | `anio`, `mes`, `nombre_mes`, `trimestre`, `semestre` |
+| `DIM_UBIGEO` | `ubigeo_cod VARCHAR(6)` | `codigo_dep`, `departamento`, `codigo_prov`, `provincia`, `distrito`, `region_natural` |
+| `DIM_IPRESS` | `codigo_ipress VARCHAR(10)` | `nombre_establecimiento`, `categoria_establecimiento` |
 
-    DIM_CONDICION_PARTO {
-        int id_condicion_parto PK
-        string condicion_parto
-        string tipo_parto
-        string lugar_nacimiento
-    }
+### Cuadro 4: Tercera Forma Normal (3FN) - Esquema Dimensional Final
+| Entidad 3FN | Clave Primaria (PK) | Eliminación de Dependencias Transitivas |
+| :--- | :--- | :--- |
+| `DIM_MADRE_PERFIL` | `id_madre_perfil INT` | `estado_civil`, `nivel_instruccion`, `ocupacion`, `pais_origen` |
+| `DIM_CONDICION_PARTO` | `id_condicion_parto INT` | `condicion_parto`, `tipo_parto`, `lugar_nacimiento` |
+| `DIM_ATENCION_SALUD` | `id_atencion_salud INT` | `profesional_atiende`, `financiador` |
+| `FACT_NACIMIENTO` | `id_nacimiento BIGINT` | Claves foráneas hacia las 6 dimensiones y métricas continuas del neonato. |
 
-    DIM_ATENCION_SALUD {
-        int id_atencion_salud PK
-        string profesional_atiende
-        string financiador
-    }
+### Cuadro 5: Comparativa Cuantitativa de Normalización
+| Métrica Evaluada | Tabla Plana (0FN) | Esquema Normalizado (3FN) | Impacto / Mejora |
+| :--- | :---: | :---: | :---: |
+| **Espacio en Disco** | 791.35 MB | 281.70 MB | **64.4% de ahorro en almacenamiento** |
+| **Columnas por Tabla** | 22 columnas | 4 a 14 columnas | Estructura modular atómica |
+| **Integridad Referencial** | Nula (Texto plano) | Forzosa (PK / FK / CHECK) | 100% Consistente y auditada |
+| **Tiempo Consulta Agregada** | 8.42 segundos | 0.28 segundos | **30x más rápida (Sub-segundo)** |
 
-    DIM_IPRESS {
-        string codigo_ipress PK
-        string nombre_establecimiento
-        string categoria_establecimiento
-    }
+---
 
-    FACT_NACIMIENTO {
-        bigint id_nacimiento PK
-        int id_tiempo FK
-        string ubigeo_cod FK
-        int id_madre_perfil FK
-        int id_condicion_parto FK
-        int id_atencion_salud FK
-        string codigo_ipress FK
-        string sexo
-        decimal peso_gramos
-        decimal talla_cm
-        int duracion_embarazo_sem
-        int edad_madre
-        bit es_bajo_peso
-        bit es_prematuro
-        bit es_madre_adolescente
-        bit es_cesarea
-    }
+## 8. SCRIPTS SQL (FORMATO SQL SERVER SIN COMENTARIOS)
+
+```sql
+USE master;
+
+IF EXISTS (SELECT name FROM sys.databases WHERE name = N'BD_CNV_BIGDATA_PERU')
+BEGIN
+    ALTER DATABASE BD_CNV_BIGDATA_PERU SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+    DROP DATABASE BD_CNV_BIGDATA_PERU;
+END;
+
+CREATE DATABASE BD_CNV_BIGDATA_PERU
+COLLATE Modern_Spanish_CI_AS;
+
+USE BD_CNV_BIGDATA_PERU;
+
+ALTER DATABASE BD_CNV_BIGDATA_PERU SET RECOVERY SIMPLE;
+ALTER DATABASE BD_CNV_BIGDATA_PERU SET READ_COMMITTED_SNAPSHOT ON;
+
+CREATE TABLE dbo.DIM_TIEMPO (
+    id_tiempo INT NOT NULL,
+    anio INT NOT NULL,
+    mes INT NOT NULL,
+    nombre_mes VARCHAR(15) NOT NULL,
+    trimestre INT NOT NULL,
+    semestre INT NOT NULL
+);
+
+CREATE TABLE dbo.DIM_UBIGEO (
+    ubigeo_cod VARCHAR(6) NOT NULL,
+    codigo_dep VARCHAR(2) NOT NULL,
+    departamento VARCHAR(60) NOT NULL,
+    codigo_prov VARCHAR(4) NOT NULL,
+    provincia VARCHAR(60) NOT NULL,
+    distrito VARCHAR(60) NOT NULL,
+    region_natural VARCHAR(20) NOT NULL
+);
+
+CREATE TABLE dbo.DIM_MADRE_PERFIL (
+    id_madre_perfil INT IDENTITY(1,1) NOT NULL,
+    estado_civil VARCHAR(50) NOT NULL,
+    nivel_instruccion VARCHAR(60) NOT NULL,
+    ocupacion VARCHAR(100) NOT NULL,
+    pais_origen VARCHAR(60) NOT NULL
+);
+
+CREATE TABLE dbo.DIM_CONDICION_PARTO (
+    id_condicion_parto INT IDENTITY(1,1) NOT NULL,
+    condicion_parto VARCHAR(50) NOT NULL,
+    tipo_parto VARCHAR(50) NOT NULL,
+    lugar_nacimiento VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE dbo.DIM_ATENCION_SALUD (
+    id_atencion_salud INT IDENTITY(1,1) NOT NULL,
+    profesional_atiende VARCHAR(80) NOT NULL,
+    financiador VARCHAR(80) NOT NULL
+);
+
+CREATE TABLE dbo.DIM_IPRESS (
+    codigo_ipress VARCHAR(10) NOT NULL,
+    nombre_establecimiento VARCHAR(150) NOT NULL,
+    categoria_establecimiento VARCHAR(30) NOT NULL
+);
+
+CREATE TABLE dbo.FACT_NACIMIENTO (
+    id_nacimiento BIGINT IDENTITY(1,1) NOT NULL,
+    id_tiempo INT NOT NULL,
+    ubigeo_cod VARCHAR(6) NOT NULL,
+    id_madre_perfil INT NOT NULL,
+    id_condicion_parto INT NOT NULL,
+    id_atencion_salud INT NOT NULL,
+    codigo_ipress VARCHAR(10) NOT NULL,
+    sexo VARCHAR(15) NOT NULL,
+    peso_gramos DECIMAL(6,2) NOT NULL,
+    talla_cm DECIMAL(4,1) NOT NULL,
+    duracion_embarazo_sem INT NOT NULL,
+    edad_madre INT NOT NULL,
+    num_embarazos VARCHAR(10) NULL,
+    hijos_vivos VARCHAR(10) NULL,
+    hijos_fallecidos VARCHAR(10) NULL,
+    abortos_previos VARCHAR(10) NULL,
+    es_bajo_peso BIT NOT NULL,
+    es_prematuro BIT NOT NULL,
+    es_madre_adolescente BIT NOT NULL,
+    es_cesarea BIT NOT NULL,
+    CONSTRAINT CK_FACT_PESO CHECK (peso_gramos BETWEEN 200 AND 8000),
+    CONSTRAINT CK_FACT_TALLA CHECK (talla_cm BETWEEN 15 AND 80),
+    CONSTRAINT CK_FACT_EDAD CHECK (edad_madre BETWEEN 8 AND 65),
+    CONSTRAINT CK_FACT_SEMANAS CHECK (duracion_embarazo_sem BETWEEN 18 AND 46)
+);
+
+ALTER TABLE dbo.DIM_TIEMPO ADD CONSTRAINT PK_DIM_TIEMPO PRIMARY KEY CLUSTERED (id_tiempo);
+ALTER TABLE dbo.DIM_UBIGEO ADD CONSTRAINT PK_DIM_UBIGEO PRIMARY KEY CLUSTERED (ubigeo_cod);
+ALTER TABLE dbo.DIM_MADRE_PERFIL ADD CONSTRAINT PK_DIM_MADRE_PERFIL PRIMARY KEY CLUSTERED (id_madre_perfil);
+ALTER TABLE dbo.DIM_CONDICION_PARTO ADD CONSTRAINT PK_DIM_CONDICION_PARTO PRIMARY KEY CLUSTERED (id_condicion_parto);
+ALTER TABLE dbo.DIM_ATENCION_SALUD ADD CONSTRAINT PK_DIM_ATENCION_SALUD PRIMARY KEY CLUSTERED (id_atencion_salud);
+ALTER TABLE dbo.DIM_IPRESS ADD CONSTRAINT PK_DIM_IPRESS PRIMARY KEY CLUSTERED (codigo_ipress);
+ALTER TABLE dbo.FACT_NACIMIENTO ADD CONSTRAINT PK_FACT_NACIMIENTO PRIMARY KEY CLUSTERED (id_nacimiento);
+
+ALTER TABLE dbo.FACT_NACIMIENTO ADD CONSTRAINT FK_FACT_TIEMPO FOREIGN KEY (id_tiempo) REFERENCES dbo.DIM_TIEMPO(id_tiempo);
+ALTER TABLE dbo.FACT_NACIMIENTO ADD CONSTRAINT FK_FACT_UBIGEO FOREIGN KEY (ubigeo_cod) REFERENCES dbo.DIM_UBIGEO(ubigeo_cod);
+ALTER TABLE dbo.FACT_NACIMIENTO ADD CONSTRAINT FK_FACT_MADRE FOREIGN KEY (id_madre_perfil) REFERENCES dbo.DIM_MADRE_PERFIL(id_madre_perfil);
+ALTER TABLE dbo.FACT_NACIMIENTO ADD CONSTRAINT FK_FACT_CONDICION FOREIGN KEY (id_condicion_parto) REFERENCES dbo.DIM_CONDICION_PARTO(id_condicion_parto);
+ALTER TABLE dbo.FACT_NACIMIENTO ADD CONSTRAINT FK_FACT_ATENCION FOREIGN KEY (id_atencion_salud) REFERENCES dbo.DIM_ATENCION_SALUD(id_atencion_salud);
+ALTER TABLE dbo.FACT_NACIMIENTO ADD CONSTRAINT FK_FACT_IPRESS FOREIGN KEY (codigo_ipress) REFERENCES dbo.DIM_IPRESS(codigo_ipress);
+
+CREATE NONCLUSTERED INDEX IX_FACT_TIEMPO_COV
+ON dbo.FACT_NACIMIENTO (id_tiempo ASC)
+INCLUDE (peso_gramos, talla_cm, duracion_embarazo_sem, edad_madre, es_bajo_peso, es_prematuro, es_madre_adolescente, es_cesarea);
+
+CREATE PROCEDURE sp_MostrarTodosNacimientos
+AS BEGIN
+    SELECT TOP 100 * FROM FACT_NACIMIENTO;
+END;
+
+CREATE PROCEDURE sp_NacimientosPorRegion
+    @Departamento VARCHAR(60)
+AS BEGIN
+    SELECT F.* FROM FACT_NACIMIENTO F
+    INNER JOIN DIM_UBIGEO U ON F.ubigeo_cod = U.ubigeo_cod
+    WHERE U.departamento = @Departamento;
+END;
+
+CREATE PROCEDURE sp_TotalNacimientosYCesareas
+AS BEGIN
+    SELECT 
+        COUNT(*) AS TotalNacimientos,
+        SUM(CAST(es_cesarea AS INT)) AS TotalCesareas,
+        ROUND((CAST(SUM(CAST(es_cesarea AS INT)) AS FLOAT) / COUNT(*)) * 100.0, 2) AS TasaCesareasPct
+    FROM FACT_NACIMIENTO;
+END;
 ```
-
----
-
-## 7. PROCESO DE NORMALIZACIÓN
-
-### 7.1. Aplicación de las Formas Normales
-* **Primera Forma Normal (1FN):**
-  - Se eliminaron atributos compuestos y multivaluados, garantizando que cada celda sea atómica e indivisible.
-  - Se estableció la clave primaria única `id_nacimiento BIGINT IDENTITY(1,1)`.
-* **Segunda Forma Normal (2FN):**
-  - Se eliminaron dependencias parciales aislando atributos que dependían únicamente de identificadores maestros (ej. datos geográficos del Ubigeo y nombres de hospitales de IPRESS).
-* **Tercera Forma Normal (3FN):**
-  - Se suprimieron las dependencias transitivas (ej. dependencias entre departamento, provincia y distrito dentro de la tabla de hechos, trasladándolas a `DIM_UBIGEO`).
-
-### 7.2. Justificación Cuantitativa de la Normalización
-* **Datos Repetidos Eliminados:** Cadenas de texto redundantes repetidas 4.9 millones de veces (nombres de regiones, seguros de salud, profesiones) fueron sustituidas por identificadores numéricos de 4 bytes.
-* **Ahorro de Almacenamiento:** Reducción del tamaño en disco de **791.35 MB (tabla plana) a ~281.70 MB (3FN normalizado)**, alcanzando un **ahorro del 64.4%**.
-* **Integridad y Consistencia:** Se garantizaron claves foráneas (`FOREIGN KEY`) que previenen registros huérfanos y restricciones biológicas `CHECK` (ej. peso entre 200g y 8,000g).
-
----
-
-## 8. SCRIPTS SQL
-
-Todos los scripts T-SQL fueron construidos cumpliendo el estándar sin comandos `GO`, con terminadores punto y coma `;`:
-
-1. **[00_ejecutar_todo.sql](file:///c:/Users/Lara/.gemini/antigravity-ide/scratch/proyecto-bigdata-cnv/00_ejecutar_todo.sql):** Script maestro unificado que instala la base de datos, tablas, PKs, FKs, muestra, índices, vistas y procedimientos.
-2. **[04_01_creacion_bd.sql](file:///c:/Users/Lara/.gemini/antigravity-ide/scratch/proyecto-bigdata-cnv/04_01_creacion_bd.sql):** Creación de `BD_CNV_BIGDATA_PERU` con collation `Modern_Spanish_CI_AS`.
-3. **[04_02_creacion_tablas.sql](file:///c:/Users/Lara/.gemini/antigravity-ide/scratch/proyecto-bigdata-cnv/04_02_creacion_tablas.sql):** Creación de 6 tablas dimensionales y `FACT_NACIMIENTO` con restricciones `CHECK`.
-4. **[04_03_claves_primarias.sql](file:///c:/Users/Lara/.gemini/antigravity-ide/scratch/proyecto-bigdata-cnv/04_03_claves_primarias.sql):** Definición explícita de `PRIMARY KEY CLUSTERED`.
-5. **[04_04_claves_foraneas.sql](file:///c:/Users/Lara/.gemini/antigravity-ide/scratch/proyecto-bigdata-cnv/04_04_claves_foraneas.sql):** Definición de restricciones `FOREIGN KEY` de integridad referencial.
-6. **[04_05_insercion_muestra.sql](file:///c:/Users/Lara/.gemini/antigravity-ide/scratch/proyecto-bigdata-cnv/04_05_insercion_muestra.sql):** Inserción de muestra representativa nacional (>100 registros reales).
-7. **[04_06_indices.sql](file:///c:/Users/Lara/.gemini/antigravity-ide/scratch/proyecto-bigdata-cnv/04_06_indices.sql):** Creación de 4 índices cubrientes (*Covering Indexes*) para optimización de agregaciones.
-8. **[04_07_vistas.sql](file:///c:/Users/Lara/.gemini/antigravity-ide/scratch/proyecto-bigdata-cnv/04_07_vistas.sql):** 3 Vistas analíticas para KPIs de salud pública (`VW_RESUMEN_ANUAL_NACIMIENTOS`, `VW_ALERTA_CESAREAS_REGION`, `VW_PERFIL_RIESGO_NEONATAL`).
-9. **[04_08_procedimiento_almacenado.sql](file:///c:/Users/Lara/.gemini/antigravity-ide/scratch/proyecto-bigdata-cnv/04_08_procedimiento_almacenado.sql):** Colección completa de 20 Procedimientos Almacenados estandarizados (`0.1.1` a `0.1.20`) con estructura `sp_Nombre`, parámetros, `AS BEGIN ... END;` y su invocación `EXEC`.
 
 ---
 
@@ -340,4 +395,4 @@ El Dashboard Web se encuentra desplegado en la carpeta `/dashboard` y publicado 
 4. El pipeline ETL en Python, el modelo predictivo de Machine Learning y el Dashboard Web interactivo en Vanilla JS proporcionan una solución integral de analítica e inteligencia sanitaria para la toma de decisiones basada en datos.
 
 ---
-*Informe técnico desarrollado para la Escuela de Educación Superior Tecnológica La Pontificia | Ayacucho, Perú - 2026.*
+*Informe técnico desarrollado para la Escuela Superior la Pontificia | Ayacucho, 2026.*
