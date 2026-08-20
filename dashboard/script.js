@@ -2,7 +2,7 @@
  * ==========================================================================================
  * SISTEMA DE VIGILANCIA Y ANALÍTICA DE NATALIDAD (CNV PERÚ - MINSA / RENIEC)
  * ARCHIVO: script.js
- * DESCRIPCIÓN: Lógica reactiva en Vanilla JavaScript con soporte multicriterio para 6 filtros
+ * DESCRIPCIÓN: Lógica reactiva en Vanilla JavaScript con cálculo multidimensional en tiempo real
  * ==========================================================================================
  */
 
@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function cargarDatos() {
         try {
             mostrarCarga(true);
-            const response = await fetch('datos.json');
+            const response = await fetch('datos.json?v=' + new Date().getTime());
             if (!response.ok) {
                 throw new Error(`Error de red HTTP: ${response.status} (${response.statusText})`);
             }
@@ -237,80 +237,104 @@ document.addEventListener('DOMContentLoaded', () => {
         if (state.selectedAnio !== 'TODOS') parts.push(`Año ${state.selectedAnio}`);
         if (state.selectedFinanciador !== 'TODOS') parts.push(`Seguro: ${state.selectedFinanciador}`);
         if (state.selectedTipoParto !== 'TODOS') parts.push(`Parto: ${state.selectedTipoParto}`);
-        if (state.selectedRiesgoPeso !== 'TODOS') parts.push(`Condición: ${state.selectedRiesgoPeso}`);
+        if (state.selectedRiesgoPeso !== 'TODOS') parts.push(`Peso: ${state.selectedRiesgoPeso === 'BAJO_PESO' ? 'Bajo Peso (<2.5kg)' : 'Peso Normal'}`);
 
         elements.filterStatusBadge.textContent = parts.join(' • ');
     }
 
     /**
-     * Actualiza las tarjetas superiores de métricas (KPIs) con recálculo dinámico
+     * Actualiza las tarjetas superiores de métricas (KPIs) con recálculo dinámico y preciso
      */
     function renderizarKPIs() {
         if (!state.data) return;
 
-        let totalNac = 0;
-        let tasaCes = 0;
-        let factorMultiplicador = 1.0;
+        let baseNacimientos = state.data.kpis_globales.total_nacimientos;
+        let tasaCes = state.data.kpis_globales.tasa_cesareas_nacional;
+        let coberturaSisPct = state.data.kpis_globales.cobertura_sis_pct;
+        let subtexto = 'Consolidado Nacional (2015 – 2025)';
 
-        // Ajuste por financiador
-        if (state.selectedFinanciador === 'SIS') factorMultiplicador *= 0.7008;
-        else if (state.selectedFinanciador === 'ESSALUD') factorMultiplicador *= 0.1797;
-        else if (state.selectedFinanciador === 'PARTICULAR') factorMultiplicador *= 0.0583;
-        else if (state.selectedFinanciador === 'PRIVADOS') factorMultiplicador *= 0.0487;
-        else if (state.selectedFinanciador === 'SANIDADES') factorMultiplicador *= 0.0045;
-
-        // Ajuste por tipo de parto
-        if (state.selectedTipoParto === 'EUTOCICO') factorMultiplicador *= 0.6106;
-        else if (state.selectedTipoParto === 'CESAREA') factorMultiplicador *= 0.3847;
-
-        // Ajuste por condición de peso
-        if (state.selectedRiesgoPeso === 'BAJO_PESO') factorMultiplicador *= 0.073;
-        else if (state.selectedRiesgoPeso === 'NORMAL') factorMultiplicador *= 0.927;
-
-        let coberturaSisPct = 70.08;
-
+        // 1. Filtrado por Departamento o Región Natural
         if (state.selectedDepartamento !== 'TODOS') {
             const depMatch = state.data.departamentos.find(d => d.nombre === state.selectedDepartamento);
             if (depMatch) {
-                totalNac = Math.round(depMatch.nacimientos * factorMultiplicador);
-                tasaCes = state.selectedTipoParto === 'CESAREA' ? 100.0 : (state.selectedTipoParto === 'EUTOCICO' ? 0.0 : depMatch.tasa_cesareas);
-                elements.kpiSubtextNacimientos.textContent = `Región ${depMatch.nombre} (${depMatch.region_natural})`;
+                baseNacimientos = depMatch.nacimientos;
+                tasaCes = depMatch.tasa_cesareas;
                 coberturaSisPct = depMatch.region_natural === 'SIERRA' ? 78.5 : (depMatch.region_natural === 'SELVA' ? 82.1 : 62.4);
+                subtexto = `Región ${depMatch.nombre} (${depMatch.region_natural})`;
             }
         } else if (state.selectedRegionNatural !== 'TODOS') {
             const deps = state.filteredDepartamentos;
-            const sumaBase = deps.reduce((acc, curr) => acc + curr.nacimientos, 0);
-            totalNac = Math.round(sumaBase * factorMultiplicador);
-            tasaCes = state.selectedTipoParto === 'CESAREA' ? 100.0 : (state.selectedTipoParto === 'EUTOCICO' ? 0.0 : (deps.reduce((acc, curr) => acc + curr.tasa_cesareas, 0) / deps.length));
-            elements.kpiSubtextNacimientos.textContent = `Región Natural: ${state.selectedRegionNatural}`;
+            baseNacimientos = deps.reduce((acc, curr) => acc + curr.nacimientos, 0);
+            tasaCes = deps.length > 0 ? (deps.reduce((acc, curr) => acc + curr.tasa_cesareas, 0) / deps.length) : 38.47;
             coberturaSisPct = state.selectedRegionNatural === 'SIERRA' ? 78.5 : (state.selectedRegionNatural === 'SELVA' ? 82.1 : 62.4);
-        } else if (state.selectedAnio !== 'TODOS') {
-            const anioMatch = state.data.serie_temporal.historica.find(item => item.anio == state.selectedAnio);
-            if (anioMatch) {
-                totalNac = Math.round(anioMatch.nacimientos * factorMultiplicador);
-                tasaCes = state.selectedTipoParto === 'CESAREA' ? 100.0 : (state.selectedTipoParto === 'EUTOCICO' ? 0.0 : anioMatch.tasa_cesareas);
-                elements.kpiSubtextNacimientos.textContent = `Nivel Nacional - Año ${state.selectedAnio}`;
-            }
-        } else {
-            totalNac = Math.round(state.data.kpis_globales.total_nacimientos * factorMultiplicador);
-            tasaCes = state.selectedTipoParto === 'CESAREA' ? 100.0 : (state.selectedTipoParto === 'EUTOCICO' ? 0.0 : state.data.kpis_globales.tasa_cesareas_nacional);
-            elements.kpiSubtextNacimientos.textContent = 'Consolidado Nacional (2015 – 2025)';
+            subtexto = `Región Natural: ${state.selectedRegionNatural}`;
         }
 
-        if (state.selectedFinanciador === 'SIS') coberturaSisPct = 100.0;
-        else if (state.selectedFinanciador !== 'TODOS') coberturaSisPct = 0.0;
+        // 2. Filtrado por Año
+        if (state.selectedAnio !== 'TODOS') {
+            const anioMatch = state.data.serie_temporal.historica.find(item => item.anio == state.selectedAnio);
+            if (anioMatch) {
+                const anioRatio = anioMatch.nacimientos / state.data.kpis_globales.total_nacimientos;
+                baseNacimientos = Math.round(baseNacimientos * anioRatio);
+                if (state.selectedDepartamento === 'TODOS' && state.selectedRegionNatural === 'TODOS') {
+                    tasaCes = anioMatch.tasa_cesareas;
+                }
+                subtexto += ` • Año ${state.selectedAnio}`;
+            }
+        }
 
-        const countVarones = Math.round(totalNac * 0.5108);
-        const countMujeres = totalNac - countVarones;
-        const countSis = Math.round(totalNac * (coberturaSisPct / 100.0));
+        // 3. Multiplicadores combinados de Financiador, Tipo de Parto y Condición de Peso
+        let factorFiltros = 1.0;
 
-        elements.kpiTotalNacimientos.textContent = totalNac.toLocaleString('es-PE');
+        if (state.selectedFinanciador === 'SIS') {
+            factorFiltros *= (coberturaSisPct / 100.0);
+            coberturaSisPct = 100.0;
+        } else if (state.selectedFinanciador === 'ESSALUD') {
+            factorFiltros *= 0.1797;
+            coberturaSisPct = 0.0;
+        } else if (state.selectedFinanciador === 'PARTICULAR') {
+            factorFiltros *= 0.0583;
+            coberturaSisPct = 0.0;
+        } else if (state.selectedFinanciador === 'PRIVADOS') {
+            factorFiltros *= 0.0487;
+            coberturaSisPct = 0.0;
+        } else if (state.selectedFinanciador === 'SANIDADES') {
+            factorFiltros *= 0.0045;
+            coberturaSisPct = 0.0;
+        }
+
+        if (state.selectedTipoParto === 'EUTOCICO') {
+            factorFiltros *= ((100.0 - tasaCes) / 100.0);
+            tasaCes = 0.0;
+        } else if (state.selectedTipoParto === 'CESAREA') {
+            factorFiltros *= (tasaCes / 100.0);
+            tasaCes = 100.0;
+        }
+
+        if (state.selectedRiesgoPeso === 'BAJO_PESO') {
+            factorFiltros *= 0.073;
+        } else if (state.selectedRiesgoPeso === 'NORMAL') {
+            factorFiltros *= 0.927;
+        }
+
+        const totalNacFinal = Math.max(1, Math.round(baseNacimientos * factorFiltros));
+        const countVarones = Math.round(totalNacFinal * 0.5108);
+        const countMujeres = totalNacFinal - countVarones;
+        const countSis = Math.round(totalNacFinal * (coberturaSisPct / 100.0));
+
+        // Actualizar todos los elementos del DOM de las 6 tarjetas
+        elements.kpiTotalNacimientos.textContent = totalNacFinal.toLocaleString('es-PE');
+        elements.kpiSubtextNacimientos.textContent = subtexto;
+
         elements.kpiCoberturaSis.textContent = `${coberturaSisPct.toFixed(2)}%`;
         elements.kpiCoberturaSisSub.textContent = `${countSis.toLocaleString('es-PE')} partos SIS`;
+
         elements.kpiVaronesPct.textContent = '51.08%';
         elements.kpiVaronesCount.textContent = `${countVarones.toLocaleString('es-PE')} registros`;
+
         elements.kpiMujeresPct.textContent = '48.91%';
         elements.kpiMujeresCount.textContent = `${countMujeres.toLocaleString('es-PE')} registros`;
+
         elements.kpiTasaCesareas.textContent = `${Number(tasaCes).toFixed(2)}%`;
         elements.kpiPesoPromedio.textContent = state.selectedRiesgoPeso === 'BAJO_PESO' ? '2,180.0 g' : (state.selectedRiesgoPeso === 'NORMAL' ? '3,310.5 g' : '3,248.8 g');
     }
@@ -508,16 +532,29 @@ document.addEventListener('DOMContentLoaded', () => {
      * Actualiza los gráficos en tiempo real ante cambios en los filtros
      */
     function actualizarGraficos() {
-        if (!state.charts.barra) return;
+        if (state.charts.barra) {
+            const deps = state.filteredDepartamentos.slice(0, 10);
+            state.charts.barra.data.labels = deps.map(d => d.nombre);
+            state.charts.barra.data.datasets[0].data = deps.map(d => d.nacimientos);
+            state.charts.barra.update();
+        }
 
-        const deps = state.filteredDepartamentos.slice(0, 10);
-        state.charts.barra.data.labels = deps.map(d => d.nombre);
-        state.charts.barra.data.datasets[0].data = deps.map(d => d.nacimientos);
-        state.charts.barra.update();
+        if (state.charts.dona && state.selectedTipoParto !== 'TODOS') {
+            if (state.selectedTipoParto === 'CESAREA') {
+                state.charts.dona.data.datasets[0].data = [0, 100, 0];
+            } else if (state.selectedTipoParto === 'EUTOCICO') {
+                state.charts.dona.data.datasets[0].data = [100, 0, 0];
+            }
+            state.charts.dona.update();
+        } else if (state.charts.dona && state.data) {
+            const dist = state.data.distribucion_parto;
+            state.charts.dona.data.datasets[0].data = [dist.eutocico, dist.cesarea, dist.otros];
+            state.charts.dona.update();
+        }
     }
 
     /**
-     * Renderiza la tabla de proyecciones quinquenales del modelo ML con badges limpios sin solapamientos
+     * Renderiza la tabla de proyecciones quinquenales del modelo ML
      */
     function renderizarProyeccionesML() {
         const tbody = elements.tbodyProyecciones;
