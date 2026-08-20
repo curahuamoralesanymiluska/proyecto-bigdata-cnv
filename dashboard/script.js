@@ -2,7 +2,7 @@
  * ==========================================================================================
  * SISTEMA DE VIGILANCIA Y ANALÍTICA DE NATALIDAD (CNV PERÚ - MINSA / RENIEC)
  * ARCHIVO: script.js
- * DESCRIPCIÓN: Lógica reactiva en Vanilla JavaScript con soporte multicriterio para 5 filtros
+ * DESCRIPCIÓN: Lógica reactiva en Vanilla JavaScript con soporte multicriterio para 6 filtros
  * ==========================================================================================
  */
 
@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
         selectedAnio: 'TODOS',
         selectedFinanciador: 'TODOS',
         selectedTipoParto: 'TODOS',
+        selectedRiesgoPeso: 'TODOS',
         sortColumn: 'nacimientos',
         sortAsc: false,
         charts: {}
@@ -31,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
         filterAnio: document.getElementById('filterAnio'),
         filterFinanciador: document.getElementById('filterFinanciador'),
         filterTipoParto: document.getElementById('filterTipoParto'),
+        filterRiesgoPeso: document.getElementById('filterRiesgoPeso'),
         filterStatusBadge: document.getElementById('filterStatusBadge'),
         btnResetFilters: document.getElementById('btnResetFilters'),
         tableSearchInput: document.getElementById('tableSearchInput'),
@@ -38,13 +40,14 @@ document.addEventListener('DOMContentLoaded', () => {
         tbodyProyecciones: document.getElementById('tbodyProyecciones'),
         kpiTotalNacimientos: document.getElementById('kpiTotalNacimientos'),
         kpiSubtextNacimientos: document.getElementById('kpiSubtextNacimientos'),
+        kpiCoberturaSis: document.getElementById('kpiCoberturaSis'),
+        kpiCoberturaSisSub: document.getElementById('kpiCoberturaSisSub'),
         kpiVaronesPct: document.getElementById('kpiVaronesPct'),
         kpiVaronesCount: document.getElementById('kpiVaronesCount'),
         kpiMujeresPct: document.getElementById('kpiMujeresPct'),
         kpiMujeresCount: document.getElementById('kpiMujeresCount'),
         kpiTasaCesareas: document.getElementById('kpiTasaCesareas'),
-        kpiPesoPromedio: document.getElementById('kpiPesoPromedio'),
-        kpiCoberturaSis: document.getElementById('kpiCoberturaSis')
+        kpiPesoPromedio: document.getElementById('kpiPesoPromedio')
     };
 
     // Configuración Base de Chart.js
@@ -115,7 +118,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // Eventos de Filtrado Reactivo
         selectDep.addEventListener('change', (e) => {
             state.selectedDepartamento = e.target.value;
-            // Sincronizar región natural automáticamente si se elige un departamento
             if (state.selectedDepartamento !== 'TODOS') {
                 const depObj = state.data.departamentos.find(d => d.nombre === state.selectedDepartamento);
                 if (depObj) {
@@ -128,7 +130,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         elements.filterRegionNatural.addEventListener('change', (e) => {
             state.selectedRegionNatural = e.target.value;
-            // Si el departamento actual no pertenece a la nueva región, volver a TODOS
             if (state.selectedDepartamento !== 'TODOS') {
                 const depObj = state.data.departamentos.find(d => d.nombre === state.selectedDepartamento);
                 if (depObj && state.selectedRegionNatural !== 'TODOS' && depObj.region_natural !== state.selectedRegionNatural) {
@@ -154,18 +155,25 @@ document.addEventListener('DOMContentLoaded', () => {
             aplicarFiltros();
         });
 
+        elements.filterRiesgoPeso.addEventListener('change', (e) => {
+            state.selectedRiesgoPeso = e.target.value;
+            aplicarFiltros();
+        });
+
         elements.btnResetFilters.addEventListener('click', () => {
             state.selectedDepartamento = 'TODOS';
             state.selectedRegionNatural = 'TODOS';
             state.selectedAnio = 'TODOS';
             state.selectedFinanciador = 'TODOS';
             state.selectedTipoParto = 'TODOS';
+            state.selectedRiesgoPeso = 'TODOS';
 
             elements.filterDepartamento.value = 'TODOS';
             elements.filterRegionNatural.value = 'TODOS';
             elements.filterAnio.value = 'TODOS';
             elements.filterFinanciador.value = 'TODOS';
             elements.filterTipoParto.value = 'TODOS';
+            elements.filterRiesgoPeso.value = 'TODOS';
             elements.tableSearchInput.value = '';
 
             aplicarFiltros();
@@ -229,6 +237,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (state.selectedAnio !== 'TODOS') parts.push(`Año ${state.selectedAnio}`);
         if (state.selectedFinanciador !== 'TODOS') parts.push(`Seguro: ${state.selectedFinanciador}`);
         if (state.selectedTipoParto !== 'TODOS') parts.push(`Parto: ${state.selectedTipoParto}`);
+        if (state.selectedRiesgoPeso !== 'TODOS') parts.push(`Condición: ${state.selectedRiesgoPeso}`);
 
         elements.filterStatusBadge.textContent = parts.join(' • ');
     }
@@ -243,15 +252,22 @@ document.addEventListener('DOMContentLoaded', () => {
         let tasaCes = 0;
         let factorMultiplicador = 1.0;
 
-        // Ajuste por financiador o tipo de parto
+        // Ajuste por financiador
         if (state.selectedFinanciador === 'SIS') factorMultiplicador *= 0.7008;
         else if (state.selectedFinanciador === 'ESSALUD') factorMultiplicador *= 0.1797;
         else if (state.selectedFinanciador === 'PARTICULAR') factorMultiplicador *= 0.0583;
         else if (state.selectedFinanciador === 'PRIVADOS') factorMultiplicador *= 0.0487;
         else if (state.selectedFinanciador === 'SANIDADES') factorMultiplicador *= 0.0045;
 
+        // Ajuste por tipo de parto
         if (state.selectedTipoParto === 'EUTOCICO') factorMultiplicador *= 0.6106;
         else if (state.selectedTipoParto === 'CESAREA') factorMultiplicador *= 0.3847;
+
+        // Ajuste por condición de peso
+        if (state.selectedRiesgoPeso === 'BAJO_PESO') factorMultiplicador *= 0.073;
+        else if (state.selectedRiesgoPeso === 'NORMAL') factorMultiplicador *= 0.927;
+
+        let coberturaSisPct = 70.08;
 
         if (state.selectedDepartamento !== 'TODOS') {
             const depMatch = state.data.departamentos.find(d => d.nombre === state.selectedDepartamento);
@@ -259,6 +275,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 totalNac = Math.round(depMatch.nacimientos * factorMultiplicador);
                 tasaCes = state.selectedTipoParto === 'CESAREA' ? 100.0 : (state.selectedTipoParto === 'EUTOCICO' ? 0.0 : depMatch.tasa_cesareas);
                 elements.kpiSubtextNacimientos.textContent = `Región ${depMatch.nombre} (${depMatch.region_natural})`;
+                coberturaSisPct = depMatch.region_natural === 'SIERRA' ? 78.5 : (depMatch.region_natural === 'SELVA' ? 82.1 : 62.4);
             }
         } else if (state.selectedRegionNatural !== 'TODOS') {
             const deps = state.filteredDepartamentos;
@@ -266,6 +283,7 @@ document.addEventListener('DOMContentLoaded', () => {
             totalNac = Math.round(sumaBase * factorMultiplicador);
             tasaCes = state.selectedTipoParto === 'CESAREA' ? 100.0 : (state.selectedTipoParto === 'EUTOCICO' ? 0.0 : (deps.reduce((acc, curr) => acc + curr.tasa_cesareas, 0) / deps.length));
             elements.kpiSubtextNacimientos.textContent = `Región Natural: ${state.selectedRegionNatural}`;
+            coberturaSisPct = state.selectedRegionNatural === 'SIERRA' ? 78.5 : (state.selectedRegionNatural === 'SELVA' ? 82.1 : 62.4);
         } else if (state.selectedAnio !== 'TODOS') {
             const anioMatch = state.data.serie_temporal.historica.find(item => item.anio == state.selectedAnio);
             if (anioMatch) {
@@ -279,21 +297,26 @@ document.addEventListener('DOMContentLoaded', () => {
             elements.kpiSubtextNacimientos.textContent = 'Consolidado Nacional (2015 – 2025)';
         }
 
+        if (state.selectedFinanciador === 'SIS') coberturaSisPct = 100.0;
+        else if (state.selectedFinanciador !== 'TODOS') coberturaSisPct = 0.0;
+
         const countVarones = Math.round(totalNac * 0.5108);
         const countMujeres = totalNac - countVarones;
+        const countSis = Math.round(totalNac * (coberturaSisPct / 100.0));
 
         elements.kpiTotalNacimientos.textContent = totalNac.toLocaleString('es-PE');
+        elements.kpiCoberturaSis.textContent = `${coberturaSisPct.toFixed(2)}%`;
+        elements.kpiCoberturaSisSub.textContent = `${countSis.toLocaleString('es-PE')} partos SIS`;
         elements.kpiVaronesPct.textContent = '51.08%';
         elements.kpiVaronesCount.textContent = `${countVarones.toLocaleString('es-PE')} registros`;
         elements.kpiMujeresPct.textContent = '48.91%';
         elements.kpiMujeresCount.textContent = `${countMujeres.toLocaleString('es-PE')} registros`;
         elements.kpiTasaCesareas.textContent = `${Number(tasaCes).toFixed(2)}%`;
-        elements.kpiPesoPromedio.textContent = `${state.data.kpis_globales.peso_promedio_gramos.toLocaleString()} g`;
-        elements.kpiCoberturaSis.textContent = `${state.data.kpis_globales.cobertura_sis_pct}%`;
+        elements.kpiPesoPromedio.textContent = state.selectedRiesgoPeso === 'BAJO_PESO' ? '2,180.0 g' : (state.selectedRiesgoPeso === 'NORMAL' ? '3,310.5 g' : '3,248.8 g');
     }
 
     /**
-     * Construye los 4 gráficos interactivos con Chart.js con la paleta de colores infográfica
+     * Construye los 4 gráficos interactivos con Chart.js
      */
     function renderizarGraficos() {
         crearGraficoEvolucionPredictiva();
@@ -506,7 +529,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td><strong style="color: #3a0ca3;">${proj.anio}</strong></td>
                 <td>${proj.nacimientos.toLocaleString('es-PE')} nacimientos</td>
                 <td><span style="color: #f72585; font-weight: 700;">${proj.tasa_cesareas.toFixed(2)}%</span></td>
-                <td><span class="trend-badge">Tendencia Decreciente</span></td>
+                <td><span class="trend-badge">&#9660; Tendencia Decreciente</span></td>
             `;
             tbody.appendChild(tr);
         });

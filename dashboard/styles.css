@@ -251,7 +251,7 @@ body {
     flex-direction: column;
     gap: 5px;
     flex: 1;
-    min-width: 180px;
+    min-width: 175px;
 }
 
 .filter-label {
@@ -331,11 +331,11 @@ body {
 }
 
 .total-card   { border-left: 4px solid var(--color-royal-purple); }
+.sis-card     { border-left: 4px solid var(--color-gold); }
 .boy-card     { border-left: 4px solid var(--color-cyan); }
 .girl-card    { border-left: 4px solid var(--color-magenta); }
 .cesarea-card { border-left: 4px solid var(--color-magenta); }
 .weight-card  { border-left: 4px solid var(--color-emerald); }
-.sis-card     { border-left: 4px solid var(--color-gold); }
 
 .sex-icon-wrap {
     flex-shrink: 0;
@@ -363,11 +363,11 @@ body {
 }
 
 .purple-color  { color: var(--color-royal-purple); }
+.gold-color    { color: #d97706; }
 .boy-color     { color: var(--color-cyan); }
 .girl-color    { color: var(--color-magenta); }
 .magenta-color { color: var(--color-magenta); }
 .green-color   { color: var(--color-emerald); }
-.gold-color    { color: #d97706; }
 
 .sex-sub {
     font-size: 0.73rem;
@@ -422,8 +422,8 @@ body {
 
 .maternal-image-card {
     width: 100%;
-    max-width: 170px;
-    height: 230px;
+    max-width: 165px;
+    height: 225px;
     border-radius: var(--radius-md);
     overflow: hidden;
     position: relative;
@@ -731,19 +731,24 @@ body {
 .magenta-text { color: var(--color-magenta) !important; }
 .cyan-text    { color: var(--color-cyan) !important; }
 
-/* Badges de Tendencia sin solapamientos */
+/* Badges de Tendencia Social (100% Limpios sin solapamientos) */
 .trend-badge {
-    display: inline-block;
-    white-space: nowrap;
-    padding: 5px 12px;
-    border-radius: var(--radius-pill);
-    font-size: 0.74rem;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-    background: rgba(58, 12, 163, 0.08);
-    color: var(--color-royal-purple);
-    border: 1px solid rgba(58, 12, 163, 0.2);
-    line-height: 1.2;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    white-space: nowrap !important;
+    word-break: keep-all !important;
+    overflow: visible !important;
+    padding: 6px 14px !important;
+    border-radius: 50px !important;
+    font-size: 0.76rem !important;
+    font-weight: 700 !important;
+    line-height: 1.2 !important;
+    background: rgba(58, 12, 163, 0.08) !important;
+    color: var(--color-royal-purple) !important;
+    border: 1px solid rgba(58, 12, 163, 0.25) !important;
+    box-sizing: border-box !important;
+    text-align: center !important;
 }
 
 /* Tabla de Datos */
@@ -782,8 +787,10 @@ body {
 }
 
 .data-table th, .data-table td {
-    padding: 10px 14px;
+    padding: 12px 14px;
     border-bottom: 1px solid #e2e8f0;
+    line-height: 1.4;
+    vertical-align: middle;
 }
 
 .data-table th {

@@ -36,7 +36,7 @@
     </div>
 
     <div class="app-layout">
-        <!-- 1. Barra Superior / Header Ejecutivo -->
+        <!-- 1. HEADER EJECUTIVO -->
         <header class="top-header">
             <div class="header-main-brand">
                 <div class="infographic-badge">
@@ -120,13 +120,13 @@
                         <svg class="icon-svg-sm" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
                         </svg>
-                        Financiador / Seguro:
+                        Aseguramiento / Financiador:
                     </label>
                     <select id="filterFinanciador" class="filter-select">
                         <option value="TODOS">Todos los Financiadores</option>
                         <option value="SIS">Seguro Integral de Salud (SIS)</option>
                         <option value="ESSALUD">EsSalud</option>
-                        <option value="PARTICULAR">Particular</option>
+                        <option value="PARTICULAR">Particular / Bolsillo</option>
                         <option value="PRIVADOS">Seguros Privados</option>
                         <option value="SANIDADES">Sanidades PNP / FFAA</option>
                     </select>
@@ -147,13 +147,29 @@
                     </select>
                 </div>
 
+                <div class="filter-group">
+                    <label for="filterRiesgoPeso" class="filter-label">
+                        <svg class="icon-svg-sm" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                        Condición de Peso:
+                    </label>
+                    <select id="filterRiesgoPeso" class="filter-select">
+                        <option value="TODOS">Todos los Pesos</option>
+                        <option value="NORMAL">Peso Normal (&ge; 2,500 g)</option>
+                        <option value="BAJO_PESO">Bajo Peso al Nacer (&lt; 2,500 g)</option>
+                    </select>
+                </div>
+
                 <div class="filter-actions">
                     <button id="btnResetFilters" class="btn-reset" title="Restablecer todos los filtros">
                         <svg class="icon-svg-sm" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
                             <polyline points="1 4 1 10 7 10"></polyline>
                             <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
                         </svg>
-                        Limpiar
+                        Limpiar Filtros
                     </button>
                 </div>
             </div>
@@ -171,9 +187,22 @@
                     </svg>
                 </div>
                 <div class="sex-info">
-                    <span class="sex-label">Total Nacimientos</span>
+                    <span class="sex-label">Volumen de Nacimientos</span>
                     <span id="kpiTotalNacimientos" class="sex-pct purple-color">4,904,793</span>
                     <span id="kpiSubtextNacimientos" class="sex-sub">Ámbito seleccionado</span>
+                </div>
+            </div>
+
+            <div class="sex-card sis-card">
+                <div class="sex-icon-wrap">
+                    <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#d97706" stroke-width="2.2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    </svg>
+                </div>
+                <div class="sex-info">
+                    <span class="sex-label">Aseguramiento SIS</span>
+                    <span id="kpiCoberturaSis" class="sex-pct gold-color">70.08%</span>
+                    <span id="kpiCoberturaSisSub" class="sex-sub">3,437,416 partos financiados</span>
                 </div>
             </div>
 
@@ -244,24 +273,11 @@
                     <span class="sex-sub">Talla: 49.15 cm</span>
                 </div>
             </div>
-
-            <div class="sex-card sis-card">
-                <div class="sex-icon-wrap">
-                    <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#ffb703" stroke-width="2.2">
-                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                    </svg>
-                </div>
-                <div class="sex-info">
-                    <span class="sex-label">Cobertura SIS</span>
-                    <span id="kpiCoberturaSis" class="sex-pct gold-color">70.08%</span>
-                    <span class="sex-sub">Financiamiento público</span>
-                </div>
-            </div>
         </section>
 
-        <!-- 4. SECCIÓN HERO INFOGRÁFICA (CON IMAGEN MATERNA COMPACTA + HITOS 01-04 + TARJETAS A-D) -->
+        <!-- 4. SECCIÓN HERO INFOGRÁFICA (IMAGEN MATERNA COMPACTA + HITOS + TARJETAS A-D) -->
         <section class="infographic-hero-container">
-            <!-- 1. Columna Izquierda: Imagen Materna Compacta y Elegante -->
+            <!-- Columna Izquierda: Imagen Materna Compacta -->
             <div class="hero-maternal-art">
                 <div class="maternal-image-card">
                     <img src="maternal_infographic.jpg" alt="Vigilancia Materno Neonatal" class="maternal-real-img">
@@ -271,7 +287,7 @@
                 </div>
             </div>
 
-            <!-- 2. Columna Central: Hitos Clave 01 - 04 -->
+            <!-- Columna Central: Hitos Clave 01 - 04 -->
             <div class="hero-steps-timeline">
                 <div class="infographic-step-card step-01">
                     <div class="step-badge-num num-01">01</div>
@@ -306,7 +322,7 @@
                 </div>
             </div>
 
-            <!-- 3. Columna Derecha: Tarjetas de Indicadores Sanitarios A - D -->
+            <!-- Columna Derecha: Tarjetas de Indicadores Sanitarios A - D -->
             <div class="hero-feature-cards">
                 <div class="feat-card feat-a">
                     <div class="feat-letter letter-a">A</div>
@@ -344,7 +360,7 @@
 
         <!-- 5. CUADRÍCULA PRINCIPAL DE GRÁFICOS ANALÍTICOS DINÁMICOS -->
         <main class="dashboard-grid">
-            <!-- Gráfico 1: Evolución Histórica y Proyección ML (Línea Sólida Cyan vs Punteada Magenta) -->
+            <!-- Gráfico 1: Evolución Histórica y Proyección ML -->
             <div class="card-panel col-span-8">
                 <div class="card-header">
                     <div>
