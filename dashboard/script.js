@@ -3,7 +3,7 @@
  * PROYECTO ACADÉMICO: Big Data con Datos Abiertos Reales (MINSA / RENIEC - CNV Perú)
  * CURSO: Gestión de Base de Datos / Big Data | Escuela Superior la Pontificia
  * ARCHIVO: script.js
- * DESCRIPCIÓN: Lógica interactiva en Vanilla JavaScript (Carga JSON, Filtros, Gráficos y Tabla)
+ * DESCRIPCIÓN: Lógica interactiva en Vanilla JavaScript con tema infográfico vibrante
  * ==========================================================================================
  */
 
@@ -32,22 +32,20 @@ document.addEventListener('DOMContentLoaded', () => {
         tableSearchInput: document.getElementById('tableSearchInput'),
         tbodyMatrizRegional: document.getElementById('tbodyMatrizRegional'),
         tbodyProyecciones: document.getElementById('tbodyProyecciones'),
-        kpiTotalNacimientos: document.getElementById('kpiTotalNacimientos'),
         kpiTasaCesareas: document.getElementById('kpiTasaCesareas'),
-        kpiPesoPromedio: document.getElementById('kpiPesoPromedio'),
-        kpiCoberturaSis: document.getElementById('kpiCoberturaSis'),
-        kpiSubtextNacimientos: document.getElementById('kpiSubtextNacimientos')
+        kpiPesoPromedio: document.getElementById('kpiPesoPromedio')
     };
 
     // Configuración Base de Chart.js
     if (window.Chart) {
-        Chart.defaults.color = '#9ca3af';
-        Chart.defaults.font.family = "'Inter', sans-serif";
-        Chart.defaults.plugins.tooltip.padding = 10;
-        Chart.defaults.plugins.tooltip.cornerRadius = 8;
-        Chart.defaults.plugins.tooltip.backgroundColor = 'rgba(15, 23, 42, 0.95)';
-        Chart.defaults.plugins.tooltip.borderColor = 'rgba(255, 255, 255, 0.1)';
-        Chart.defaults.plugins.tooltip.borderWidth = 1;
+        Chart.defaults.color = '#64748b';
+        Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
+        Chart.defaults.font.weight = '600';
+        Chart.defaults.plugins.tooltip.padding = 12;
+        Chart.defaults.plugins.tooltip.cornerRadius = 10;
+        Chart.defaults.plugins.tooltip.backgroundColor = 'rgba(36, 0, 70, 0.95)';
+        Chart.defaults.plugins.tooltip.borderColor = '#f72585';
+        Chart.defaults.plugins.tooltip.borderWidth = 1.5;
     }
 
     // Inicialización: Cargar datos desde datos.json
@@ -85,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function inicializarFiltros() {
         // Poblado de Departamentos
         const selectDep = elements.filterDepartamento;
-        selectDep.innerHTML = '<option value="TODOS">Todos los Departamentos (Nacional)</option>';
+        selectDep.innerHTML = '<option value="TODOS">Todos los Departamentos (Nivel Nacional)</option>';
         state.data.departamentos.forEach(dep => {
             const option = document.createElement('option');
             option.value = dep.nombre;
@@ -95,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Poblado de Años
         const selectAnio = elements.filterAnio;
-        selectAnio.innerHTML = '<option value="TODOS">Histórico Consolidado (2015 - 2025)</option>';
+        selectAnio.innerHTML = '<option value="TODOS">Consolidado Multianual (2015 - 2025)</option>';
         state.data.serie_temporal.historica.forEach(item => {
             const option = document.createElement('option');
             option.value = item.anio;
@@ -177,42 +175,31 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderizarKPIs() {
         if (!state.data) return;
 
-        let totalNac = 0;
         let tasaCes = 0;
 
         if (state.selectedDepartamento !== 'TODOS') {
             const depMatch = state.data.departamentos.find(d => d.nombre === state.selectedDepartamento);
             if (depMatch) {
-                totalNac = depMatch.nacimientos;
                 tasaCes = depMatch.tasa_cesareas;
-                elements.kpiSubtextNacimientos.textContent = `Región ${depMatch.nombre} (${depMatch.region_natural})`;
             }
         } else if (state.selectedRegionNatural !== 'TODOS') {
             const deps = state.filteredDepartamentos;
-            totalNac = deps.reduce((acc, curr) => acc + curr.nacimientos, 0);
             tasaCes = deps.length > 0 ? (deps.reduce((acc, curr) => acc + curr.tasa_cesareas, 0) / deps.length) : 0;
-            elements.kpiSubtextNacimientos.textContent = `Región Natural: ${state.selectedRegionNatural}`;
         } else if (state.selectedAnio !== 'TODOS') {
             const anioMatch = state.data.serie_temporal.historica.find(item => item.anio == state.selectedAnio);
             if (anioMatch) {
-                totalNac = anioMatch.nacimientos;
                 tasaCes = anioMatch.tasa_cesareas;
-                elements.kpiSubtextNacimientos.textContent = `Nivel Nacional - Año ${state.selectedAnio}`;
             }
         } else {
-            totalNac = state.data.kpis_globales.total_nacimientos;
             tasaCes = state.data.kpis_globales.tasa_cesareas_nacional;
-            elements.kpiSubtextNacimientos.textContent = 'Consolidado Nacional (2015 - 2025)';
         }
 
-        elements.kpiTotalNacimientos.textContent = totalNac.toLocaleString('es-PE');
         elements.kpiTasaCesareas.textContent = `${Number(tasaCes).toFixed(2)}%`;
         elements.kpiPesoPromedio.textContent = `${state.data.kpis_globales.peso_promedio_gramos.toLocaleString()} g`;
-        elements.kpiCoberturaSis.textContent = `${state.data.kpis_globales.cobertura_sis_pct}%`;
     }
 
     /**
-     * Construye los 4 gráficos interactivos con Chart.js
+     * Construye los 4 gráficos interactivos con Chart.js con la nueva paleta de colores
      */
     function renderizarGraficos() {
         crearGraficoEvolucionPredictiva();
@@ -222,7 +209,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
-     * Gráfico 1: Serie Temporal Histórica + Proyección de Regresión Lineal
+     * Gráfico 1: Serie Temporal Histórica (Cyan) + Proyección ML (Magenta Punteada)
      */
     function crearGraficoEvolucionPredictiva() {
         const ctx = document.getElementById('chartEvolucionPredictiva').getContext('2d');
@@ -230,11 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const projData = state.data.serie_temporal.proyectada;
 
         const labels = [...histData.map(d => d.anio), ...projData.map(d => d.anio)];
-        
-        // Histórico con nulls en el futuro
         const valoresHistoricos = [...histData.map(d => d.nacimientos), ...projData.map(() => null)];
-        
-        // Proyección que empalma con el último histórico (2025)
         const ultimoHistorico = histData[histData.length - 1];
         const valoresProyectados = [
             ...histData.slice(0, -1).map(() => null),
@@ -248,27 +231,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 labels: labels,
                 datasets: [
                     {
-                        label: 'Datos Históricos Reales',
+                        label: 'Datos Históricos Reales (MINSA)',
                         data: valoresHistoricos,
-                        borderColor: '#38bdf8',
-                        backgroundColor: 'rgba(56, 189, 248, 0.1)',
-                        borderWidth: 3,
-                        pointBackgroundColor: '#38bdf8',
+                        borderColor: '#00b4d8',
+                        backgroundColor: 'rgba(0, 180, 216, 0.12)',
+                        borderWidth: 3.5,
+                        pointBackgroundColor: '#00b4d8',
                         pointBorderColor: '#ffffff',
-                        pointRadius: 4,
+                        pointBorderWidth: 2,
+                        pointRadius: 5,
                         fill: true,
                         tension: 0.3
                     },
                     {
                         label: 'Proyección Predictiva ML (2026-2030)',
                         data: valoresProyectados,
-                        borderColor: '#f59e0b',
-                        backgroundColor: 'rgba(245, 158, 11, 0.05)',
-                        borderWidth: 3,
+                        borderColor: '#f72585',
+                        backgroundColor: 'rgba(247, 37, 133, 0.06)',
+                        borderWidth: 3.5,
                         borderDash: [6, 6],
-                        pointBackgroundColor: '#f59e0b',
+                        pointBackgroundColor: '#f72585',
                         pointBorderColor: '#ffffff',
-                        pointRadius: 5,
+                        pointBorderWidth: 2,
+                        pointRadius: 6,
                         fill: false,
                         tension: 0.1
                     }
@@ -278,9 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: {
-                        display: false
-                    },
+                    legend: { display: false },
                     tooltip: {
                         callbacks: {
                             label: function(context) {
@@ -294,21 +277,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 scales: {
                     y: {
-                        grid: { color: 'rgba(255, 255, 255, 0.05)' },
-                        ticks: {
-                            callback: value => (value / 1000) + 'k'
-                        }
+                        grid: { color: 'rgba(0, 0, 0, 0.05)' },
+                        ticks: { callback: value => (value / 1000) + 'k' }
                     },
-                    x: {
-                        grid: { color: 'rgba(255, 255, 255, 0.05)' }
-                    }
+                    x: { grid: { color: 'rgba(0, 0, 0, 0.03)' } }
                 }
             }
         });
     }
 
     /**
-     * Gráfico 2: Vía de Parto (Doughnut)
+     * Gráfico 2: Vía de Parto (Doughnut en Esmeralda y Magenta)
      */
     function crearGraficoPartosDona() {
         const ctx = document.getElementById('chartPartosDona').getContext('2d');
@@ -317,22 +296,23 @@ document.addEventListener('DOMContentLoaded', () => {
         state.charts.dona = new Chart(ctx, {
             type: 'doughnut',
             data: {
-                labels: ['Parto Eutócico (Natural)', 'Parto por Cesárea', 'Instrumentado / Otros'],
+                labels: ['Parto Natural (Eutócico)', 'Parto por Cesárea', 'Otros / Instrumentado'],
                 datasets: [{
                     data: [dist.eutocico, dist.cesarea, dist.otros],
-                    backgroundColor: ['#10b981', '#f43f5e', '#64748b'],
-                    borderWidth: 0,
-                    hoverOffset: 6
+                    backgroundColor: ['#06d6a0', '#f72585', '#7209b7'],
+                    borderWidth: 3,
+                    borderColor: '#ffffff',
+                    hoverOffset: 8
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                cutout: '68%',
+                cutout: '66%',
                 plugins: {
                     legend: {
                         position: 'bottom',
-                        labels: { boxWidth: 12, padding: 12, font: { size: 11 } }
+                        labels: { boxWidth: 14, padding: 14, font: { size: 12, weight: '700' } }
                     }
                 }
             }
@@ -340,7 +320,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
-     * Gráfico 3: Departamentos (Bar Chart)
+     * Gráfico 3: Departamentos (Bar Chart con Paleta Royal Indigo)
      */
     function crearGraficoDepartamentosBarra() {
         const ctx = document.getElementById('chartDepartamentosBarra').getContext('2d');
@@ -353,8 +333,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 datasets: [{
                     label: 'Nacimientos Totales',
                     data: deps.map(d => d.nacimientos),
-                    backgroundColor: 'rgba(129, 140, 248, 0.85)',
-                    borderRadius: 6
+                    backgroundColor: 'rgba(67, 97, 238, 0.85)',
+                    hoverBackgroundColor: '#3a0ca3',
+                    borderRadius: 8
                 }]
             },
             options: {
@@ -363,7 +344,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 plugins: { legend: { display: false } },
                 scales: {
                     y: {
-                        grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                        grid: { color: 'rgba(0, 0, 0, 0.05)' },
                         ticks: { callback: v => (v / 1000) + 'k' }
                     },
                     x: { grid: { display: false } }
@@ -373,7 +354,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
-     * Gráfico 4: Estacionalidad Mensual
+     * Gráfico 4: Estacionalidad Mensual en Ámbar Dorado
      */
     function crearGraficoEstacionalidad() {
         const ctx = document.getElementById('chartEstacionalidadMeses').getContext('2d');
@@ -386,8 +367,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 datasets: [{
                     label: 'Nacimientos Acumulados',
                     data: est.map(e => e.nacimientos),
-                    backgroundColor: 'rgba(56, 189, 248, 0.75)',
-                    borderRadius: 4
+                    backgroundColor: 'rgba(255, 183, 3, 0.85)',
+                    hoverBackgroundColor: '#fb8500',
+                    borderRadius: 6
                 }]
             },
             options: {
@@ -396,7 +378,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 plugins: { legend: { display: false } },
                 scales: {
                     y: {
-                        grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                        grid: { color: 'rgba(0, 0, 0, 0.05)' },
                         ticks: { callback: v => (v / 1000) + 'k' }
                     },
                     x: { grid: { display: false } }
@@ -411,7 +393,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function actualizarGraficos() {
         if (!state.charts.barra) return;
 
-        // Actualizar gráfico de departamentos
         const deps = state.filteredDepartamentos.slice(0, 10);
         state.charts.barra.data.labels = deps.map(d => d.nombre);
         state.charts.barra.data.datasets[0].data = deps.map(d => d.nacimientos);
@@ -428,10 +409,10 @@ document.addEventListener('DOMContentLoaded', () => {
         state.data.serie_temporal.proyectada.forEach(proj => {
             const tr = document.createElement('tr');
             tr.innerHTML = `
-                <td><strong>${proj.anio}</strong></td>
+                <td><strong style="color: #3a0ca3;">${proj.anio}</strong></td>
                 <td>${proj.nacimientos.toLocaleString('es-PE')} nacimientos</td>
-                <td><span style="color: #fca5a5; font-weight: 600;">${proj.tasa_cesareas.toFixed(2)}%</span></td>
-                <td><span class="badge-tag">Tendencia Decreciente</span></td>
+                <td><span style="color: #f72585; font-weight: 700;">${proj.tasa_cesareas.toFixed(2)}%</span></td>
+                <td><span class="badge-pill bg-purple" style="font-size: 0.72rem;">Tendencia Decreciente</span></td>
             `;
             tbody.appendChild(tr);
         });
@@ -448,10 +429,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td><strong>${dep.nombre}</strong></td>
-                <td><span class="badge-tag">${dep.region_natural}</span></td>
+                <td><span class="badge-pill bg-cyan" style="font-size: 0.72rem;">${dep.region_natural}</span></td>
                 <td>${dep.nacimientos.toLocaleString('es-PE')}</td>
                 <td>${dep.pct.toFixed(2)}%</td>
-                <td><span style="color: ${dep.tasa_cesareas > 40 ? '#f87171' : '#f3f4f6'}; font-weight: 600;">${dep.tasa_cesareas.toFixed(1)}%</span></td>
+                <td><span style="color: ${dep.tasa_cesareas > 40 ? '#f72585' : '#1e293b'}; font-weight: 700;">${dep.tasa_cesareas.toFixed(1)}%</span></td>
                 <td>${dep.tasa_bajo_peso.toFixed(1)}%</td>
                 <td>${dep.tasa_adolescente.toFixed(1)}%</td>
             `;
