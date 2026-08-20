@@ -1,0 +1,6 @@
+id_tiempo;ubigeo_cod;id_madre_perfil;id_condicion_parto;id_atencion_salud;codigo_ipress;sexo;peso_gramos;talla_cm;duracion_embarazo_sem;edad_madre;num_embarazos;hijos_vivos;hijos_fallecidos;abortos_previos;es_bajo_peso;es_prematuro;es_madre_adolescente;es_cesarea
+202506;150101;1;1;1;00006240;MASCULINO;3450.0;50.0;39;26;1;1;0;0;0;0;0;0
+202505;050108;2;1;1;00002155;MASCULINO;2350.0;45.0;35;17;1;1;0;0;1;1;1;0
+202504;150101;3;2;2;00006240;FEMENINO;3120.0;48.5;38;31;2;2;0;0;0;0;0;1
+202412;150132;4;2;3;00006321;MASCULINO;3800.0;51.5;40;29;3;3;0;0;0;0;0;1
+202411;200104;5;1;1;00010210;MASCULINO;2400.0;45.5;36;16;1;1;0;0;1;1;1;0

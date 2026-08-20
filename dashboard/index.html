@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Analítico y Predictivo - CNV Perú</title>
+    <meta name="description" content="Dashboard Analítico y Predictivo de Big Data sobre el Certificado de Nacido Vivo en el Perú (MINSA / RENIEC 2015-2030)">
+    
+    <!-- Fuentes Tipográficas Profesionales -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Librería Chart.js vía CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Estilos CSS Vanilla -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Estado de Carga (Loading Overlay) -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <p class="loading-text">Cargando datos del repositorio analítico...</p>
+    </div>
+
+    <!-- Contenedor de Errores -->
+    <div id="errorContainer" class="error-banner" style="display: none;">
+        <svg class="icon-svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <span id="errorMessage">Error al sincronizar con el archivo de datos.</span>
+    </div>
+
+    <div class="app-layout">
+        <!-- Barra Superior / Header Institucional -->
+        <header class="top-header">
+            <div class="header-branding">
+                <div class="logo-badge">
+                    <svg class="icon-svg" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#38bdf8" stroke-width="2">
+                        <path d="M3 3v18h18"></path>
+                        <path d="M18 9l-5 5-4-4-3 3"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="header-title">Sistema Analítico y Predictivo CNV Perú</h1>
+                    <p class="header-subtitle">Certificados de Nacidos Vivos en el Perú | Ministerio de Salud (MINSA) / RENIEC</p>
+                </div>
+            </div>
+            
+            <div class="header-meta">
+                <div class="badge-tag">Escuela Superior la Pontificia</div>
+                <div class="badge-tag accent">Ayacucho, 2026</div>
+            </div>
+        </header>
+
+        <!-- Barra de Filtros Interactivos -->
+        <section class="filters-panel">
+            <div class="filters-wrapper">
+                <div class="filter-group">
+                    <label for="filterDepartamento" class="filter-label">
+                        <svg class="icon-svg-sm" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+                        Departamento / Región:
+                    </label>
+                    <select id="filterDepartamento" class="filter-select">
+                        <option value="TODOS">Todos los Departamentos (Nacional)</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="filterRegionNatural" class="filter-label">
+                        <svg class="icon-svg-sm" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+                            <line x1="8" y1="2" x2="8" y2="18"></line>
+                            <line x1="16" y1="6" x2="16" y2="22"></line>
+                        </svg>
+                        Región Natural:
+                    </label>
+                    <select id="filterRegionNatural" class="filter-select">
+                        <option value="TODOS">Todas las Regiones</option>
+                        <option value="COSTA">Costa</option>
+                        <option value="SIERRA">Sierra</option>
+                        <option value="SELVA">Selva</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="filterAnio" class="filter-label">
+                        <svg class="icon-svg-sm" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
+                        Año de Análisis:
+                    </label>
+                    <select id="filterAnio" class="filter-select">
+                        <option value="TODOS">Histórico Consolidado (2015 - 2025)</option>
+                    </select>
+                </div>
+
+                <div class="filter-actions">
+                    <button id="btnResetFilters" class="btn-secondary" title="Restablecer todos los filtros">
+                        <svg class="icon-svg-sm" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="1 4 1 10 7 10"></polyline>
+                            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+                        </svg>
+                        Limpiar Filtros
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tarjetas de Métricas Clave (KPI Cards) -->
+        <section class="kpi-container">
+            <div class="kpi-card" style="--accent-bar: #38bdf8;">
+                <div class="kpi-header">
+                    <span class="kpi-title">Volumen de Nacimientos</span>
+                    <div class="kpi-icon-box">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#38bdf8" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                    </div>
+                </div>
+                <div id="kpiTotalNacimientos" class="kpi-value">--</div>
+                <div id="kpiSubtextNacimientos" class="kpi-subtext">Total en el ámbito seleccionado</div>
+            </div>
+
+            <div class="kpi-card" style="--accent-bar: #f43f5e;">
+                <div class="kpi-header">
+                    <span class="kpi-title">Tasa de Cesáreas</span>
+                    <div class="kpi-icon-box">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#f43f5e" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="12" y1="18" x2="12" y2="12"></line>
+                            <line x1="9" y1="15" x2="15" y2="15"></line>
+                        </svg>
+                    </div>
+                </div>
+                <div id="kpiTasaCesareas" class="kpi-value">--%</div>
+                <div id="kpiAlertaCesareas" class="kpi-subtext alert">Umbral OMS recomendado: 15.0%</div>
+            </div>
+
+            <div class="kpi-card" style="--accent-bar: #10b981;">
+                <div class="kpi-header">
+                    <span class="kpi-title">Peso Promedio al Nacer</span>
+                    <div class="kpi-icon-box">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#10b981" stroke-width="2">
+                            <line x1="12" y1="2" x2="12" y2="22"></line>
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                        </svg>
+                    </div>
+                </div>
+                <div id="kpiPesoPromedio" class="kpi-value">3,248.8 g</div>
+                <div class="kpi-subtext">Talla neonatal media: 49.15 cm</div>
+            </div>
+
+            <div class="kpi-card" style="--accent-bar: #8b5cf6;">
+                <div class="kpi-header">
+                    <span class="kpi-title">Aseguramiento SIS</span>
+                    <div class="kpi-icon-box">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#8b5cf6" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        </svg>
+                    </div>
+                </div>
+                <div id="kpiCoberturaSis" class="kpi-value">68.5%</div>
+                <div class="kpi-subtext">Cobertura pública estatal prioritaria</div>
+            </div>
+        </section>
+
+        <!-- Cuadrícula Principal de Gráficos Analíticos -->
+        <main class="dashboard-grid">
+            <!-- Gráfico 1: Evolución Histórica y Proyección ML (Línea Sólida vs Punteada) -->
+            <div class="card-panel col-span-8">
+                <div class="card-header">
+                    <div>
+                        <h2 class="card-title">Evolución Histórica y Proyección Predictiva (2015 - 2030)</h2>
+                        <p class="card-subtitle">Datos históricos reales (2015-2025) vs Modelo de Regresión Lineal OLS (2026-2030)</p>
+                    </div>
+                    <div class="legend-indicator">
+                        <span class="dot solid"></span> Histórico
+                        <span class="dot dashed"></span> Proyección ML
+                    </div>
+                </div>
+                <div class="chart-box">
+                    <canvas id="chartEvolucionPredictiva"></canvas>
+                </div>
+            </div>
+
+            <!-- Gráfico 2: Vía de Parto (Doughnut Chart) -->
+            <div class="card-panel col-span-4">
+                <div class="card-header">
+                    <div>
+                        <h2 class="card-title">Vía de Parto</h2>
+                        <p class="card-subtitle">Cesáreas vs Eutócicos</p>
+                    </div>
+                </div>
+                <div class="chart-box">
+                    <canvas id="chartPartosDona"></canvas>
+                </div>
+            </div>
+
+            <!-- Gráfico 3: Comparativo Departamental (Bar Chart) -->
+            <div class="card-panel col-span-7">
+                <div class="card-header">
+                    <div>
+                        <h2 class="card-title">Distribución y Comparativa por Departamento</h2>
+                        <p class="card-subtitle">Volumen de nacimientos registrados según ubicación geográfica</p>
+                    </div>
+                </div>
+                <div class="chart-box">
+                    <canvas id="chartDepartamentosBarra"></canvas>
+                </div>
+            </div>
+
+            <!-- Gráfico 4: Estacionalidad Intra-anual -->
+            <div class="card-panel col-span-5">
+                <div class="card-header">
+                    <div>
+                        <h2 class="card-title">Patrón Estacional Mensual</h2>
+                        <p class="card-subtitle">Frecuencia acumulada por mes de nacimiento</p>
+                    </div>
+                </div>
+                <div class="chart-box">
+                    <canvas id="chartEstacionalidadMeses"></canvas>
+                </div>
+            </div>
+
+            <!-- Sección del Modelo Predictivo -->
+            <div class="card-panel col-span-12">
+                <div class="card-header">
+                    <div>
+                        <h2 class="card-title">Detalle Técnico del Modelo Predictivo de Machine Learning</h2>
+                        <p class="card-subtitle">Ecuación paramétrica de Regresión Lineal y Proyecciones Quinquenales</p>
+                    </div>
+                </div>
+                
+                <div class="ml-parameters-grid">
+                    <div class="ml-formula-card">
+                        <div class="ml-tag">Ecuación Resultante (Nacimientos)</div>
+                        <div id="mlFormulaText" class="ml-formula">Y = -6,998.95 * X + 14,583,724.73</div>
+                        <div class="ml-params-list">
+                            <div class="ml-param-item">
+                                <span>Pendiente (m):</span>
+                                <strong id="mlPendiente">-6,998.95 nacimientos/año</strong>
+                            </div>
+                            <div class="ml-param-item">
+                                <span>Intercepto (b):</span>
+                                <strong id="mlIntercepto">14,583,724.73</strong>
+                            </div>
+                            <div class="ml-param-item">
+                                <span>Coeficiente R²:</span>
+                                <strong id="mlR2">0.3338</strong>
+                            </div>
+                            <div class="ml-param-item">
+                                <span>Error RMSE:</span>
+                                <strong id="mlRMSE">±31,266.25 nacimientos</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ml-projections-table-box">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Año Futuro</th>
+                                    <th>Proyección Nacimientos</th>
+                                    <th>Tasa Cesáreas Est. (%)</th>
+                                    <th>Comportamiento Esperado</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbodyProyecciones">
+                                <!-- Poblado dinámicamente con JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabla de Datos Detallada por Región -->
+            <div class="card-panel col-span-12">
+                <div class="card-header">
+                    <div>
+                        <h2 class="card-title">Matriz Regional de Indicadores Sanitarios</h2>
+                        <p class="card-subtitle">Resumen demográfico y factores de riesgo neonatal por departamento</p>
+                    </div>
+                    <div class="table-search-box">
+                        <input type="text" id="tableSearchInput" class="table-search" placeholder="Buscar departamento...">
+                    </div>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="data-table interactive" id="matrizRegionalTable">
+                        <thead>
+                            <tr>
+                                <th data-sort="nombre">Departamento &#9650;&#9660;</th>
+                                <th data-sort="region_natural">Región Natural &#9650;&#9660;</th>
+                                <th data-sort="nacimientos">Nacimientos &#9650;&#9660;</th>
+                                <th data-sort="pct">Participación (%) &#9650;&#9660;</th>
+                                <th data-sort="tasa_cesareas">Tasa Cesáreas (%) &#9650;&#9660;</th>
+                                <th data-sort="tasa_bajo_peso">Bajo Peso (%) &#9650;&#9660;</th>
+                                <th data-sort="tasa_adolescente">Embarazo Adolescente (%) &#9650;&#9660;</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyMatrizRegional">
+                            <!-- Poblado dinámico por script.js -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+
+        <!-- Pie de Página Institucional -->
+        <footer class="app-footer">
+            <div class="footer-left">
+                <strong>Escuela Superior la Pontificia</strong> | Carrera: Ingeniería de Sistemas de Información (Ciclo: VIII – B)
+                <br>Curso: Gestión de Base de Datos / Big Data | Docente: Ing. Erick Jhonatan Palomino Ayala
+            </div>
+            <div class="footer-right">
+                Integrantes: Curahua Morales, Any Miluska | Ayacucho, 2026
+            </div>
+        </footer>
+    </div>
+
+    <!-- Script de Lógica Vanilla JS -->
+    <script src="script.js"></script>
+</body>
+</html>

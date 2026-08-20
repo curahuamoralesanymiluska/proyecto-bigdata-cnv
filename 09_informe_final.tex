@@ -1,0 +1,246 @@
+\documentclass[12pt,a4paper]{article}
+
+% Paquetes esenciales
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{microtype}
+
+% Configuración de Márgenes e Interlineado (Interlineado a 2.0 requerido)
+\geometry{top=2.5cm, bottom=2.5cm, left=3.0cm, right=2.5cm}
+\doublespacing
+
+% Configuración de Enlaces
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue!70!black,
+    citecolor=blue!70!black,
+    urlcolor=blue!70!black
+}
+
+% Encabezados y Pies de Página
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\small\textit{Gestión de Base de Datos - CNV Perú}}
+\lhead{\small\textit{Escuela Superior la Pontificia}}
+\rfoot{\thepage}
+
+\begin{document}
+
+% ==============================================================================
+% PORTADA INSTITUCIONAL
+% ==============================================================================
+\begin{titlepage}
+    \centering
+    \vspace*{1cm}
+    {\scshape\LARGE Escuela Superior la Pontificia \par}
+    \vspace{0.8cm}
+    {\scshape\Large Carrera Profesional de Ingeniería de Sistemas de Información \par}
+    \vspace{0.3cm}
+    {\large Ciclo: VIII -- B \par}
+    \vspace{1.5cm}
+    
+    {\huge\bfseries GESTIÓN DE BASE DE DATOS Y BIG DATA CON DATOS ABIERTOS REALES\par}
+    \vspace{0.5cm}
+    {\Large\bfseries Arquitectura Dimensional, Normalización 3FN, Pipeline ETL, Modelo Predictivo y Dashboard del Certificado de Nacido Vivo en el Perú (2015 -- 2025)\par}
+    \vspace{2.0cm}
+    
+    \begin{flushleft}
+        \large
+        \textbf{Curso:} Gestión de Base de Datos / Big Data \\
+        \textbf{Docente:} Ing. Erick Jhonatan Palomino Ayala \\
+        \textbf{Integrantes:} \\
+        \hspace{1cm} $\bullet$ Curahua Morales, Any Miluska
+    \end{flushleft}
+    
+    \vfill
+    {\large Ayacucho, Perú \par}
+    {\large 2026 \par}
+\end{titlepage}
+
+\newpage
+\tableofcontents
+\newpage
+
+% ==============================================================================
+% SECCIÓN 1: INTRODUCCIÓN
+% ==============================================================================
+\section{Introducción}
+
+La gestión estratégica de grandes volúmenes de datos (\textit{Big Data}) constituye una herramienta fundamental para el diagnóstico y la toma de decisiones en el sector salud. En el Perú, la Plataforma Nacional de Datos Abiertos pone a disposición pública los registros del Certificado de Nacido Vivo (CNV), administrado por el Ministerio de Salud (MINSA) y el Registro Nacional de Identificación y Estado Civil (RENIEC).
+
+El presente informe documenta el desarrollo técnico de una solución integral de ingeniería de datos aplicada sobre \textbf{4,904,793 registros} correspondientes al período \textbf{2015 -- 2025}. Se aborda el modelado relacional en Esquema Estrella, la normalización hasta la Tercera Forma Normal (3FN), el desarrollo de scripts T-SQL sin sentencias \texttt{GO}, el pipeline ETL en Python, el entrenamiento de un modelo predictivo por regresión lineal y el despliegue de un Dashboard Web interactivo en Vanilla JavaScript.
+
+% ==============================================================================
+% SECCIÓN 2: OBJETIVOS
+% ==============================================================================
+\section{Objetivos}
+
+\subsection{Objetivo General}
+Diseñar e implementar una arquitectura de base de datos relacional normalizada y analítica para procesar, modelar, predecir y visualizar los nacimientos en el Perú entre 2015 y 2025.
+
+\subsection{Objetivos Específicos}
+\begin{enumerate}
+    \item Demostrar cuantitativamente la inviabilidad del análisis en hojas de cálculo tradicionales (Microsoft Excel) frente a un volumen de 4.9 millones de filas.
+    \item Construir un Esquema Estrella normalizado en 3FN que reduzca la redundancia y optimice el almacenamiento.
+    \item Desarrollar los scripts T-SQL en Microsoft SQL Server con restricciones de integridad, índices cubrientes, vistas y 20 procedimientos almacenados estandarizados.
+    \item Implementar un pipeline ETL en Python con la librería Pandas para la limpieza, imputación y estandarización de códigos de Ubigeo INEI.
+    \item Entrenar un modelo de regresión lineal para proyectar la natalidad y la tasa de cesáreas hacia el quinquenio 2026 -- 2030.
+    \item Construir un Dashboard Web interactivo en HTML5, CSS y JavaScript Vanilla que consuma los datos limpios en formato JSON.
+\end{enumerate}
+
+% ==============================================================================
+% SECCIÓN 3: FUENTE OFICIAL DE LOS DATOS
+% ==============================================================================
+\section{Fuente Oficial de los Datos}
+
+\begin{itemize}
+    \item \textbf{Entidad Productora:} Ministerio de Salud del Perú (MINSA) / RENIEC / Oficina de Tecnologías de la Información (OTI).
+    \item \textbf{Plataforma:} Plataforma Nacional de Datos Abiertos del Perú (\url{https://www.datosabiertos.gob.pe/}).
+    \item \textbf{Nombre del Dataset:} \textit{Registros de Nacidos Vivos en el Perú 2026 (Certificado de Nacido Vivo - CNV)}.
+    \item \textbf{Período Analizado:} 11 años completos (2015 al 2025).
+    \item \textbf{Volumen:} 4,904,793 filas, 22 variables y 791.35 MB de tamaño físico.
+\end{itemize}
+
+% ==============================================================================
+% SECCIÓN 4: DESCRIPCIÓN DEL DATASET
+% ==============================================================================
+\section{Descripción del Dataset}
+
+El dataset oficial contiene 4,904,793 registros. Una hoja de cálculo convencional de Microsoft Excel posee un límite máximo de 1,048,576 filas. Por consiguiente, el dataset excede en \textbf{367.8\% (4.68 veces)} la capacidad física de Excel, provocando truncamiento crítico de 3.85 millones de registros y justificando la implementación de motores de bases de datos relacionales optimizados.
+
+Las 22 variables comprenden métricas biométricas neonatales (\texttt{PESO\_NACIDO}, \texttt{TALLA\_NACIDO}, \texttt{DUR\_EMB\_PARTO}, \texttt{sexo\_nacido}), características maternas (\texttt{Edad\_Madre}, \texttt{Estado\_Civil}, \texttt{Nivel\_Intrucción\_Madre}, \texttt{DESC\_OCUPACION}) e información asistencial (\texttt{IdUbigeoInei}, \texttt{Ipress}, \texttt{Condicion\_Parto}, \texttt{Atiende\_Parto}, \texttt{Financiador\_Parto}).
+
+% ==============================================================================
+% SECCIÓN 5: MODELO ENTIDAD-RELACIÓN Y ARQUITECTURA DIMENSIONAL
+% ==============================================================================
+\section{Modelo Entidad-Relación y Arquitectura Dimensional}
+
+Se implementó un Esquema Estrella (\textit{Star Schema}) con una tabla principal de hechos y seis tablas dimensionales:
+\begin{itemize}
+    \item \textbf{Tabla de Hechos:} \texttt{FACT\_NACIMIENTO} (almacena el evento del parto, claves foráneas, métricas continuas y flags booleanos: \texttt{es\_bajo\_peso}, \texttt{es\_prematuro}, \texttt{es\_madre\_adolescente}, \texttt{es\_cesarea}).
+    \item \textbf{Dimensiones Maestras:} \texttt{DIM\_TIEMPO}, \texttt{DIM\_UBIGEO}, \texttt{DIM\_MADRE\_PERFIL}, \texttt{DIM\_CONDICION\_PARTO}, \texttt{DIM\_ATENCION\_SALUD}, y \texttt{DIM\_IPRESS}.
+\end{itemize}
+
+% ==============================================================================
+% SECCIÓN 6: PROCESO DE NORMALIZACIÓN
+% ==============================================================================
+\section{Proceso de Normalización (1FN, 2FN y 3FN)}
+
+El proceso formal se ejecutó en tres etapas:
+\begin{enumerate}
+    \item \textbf{1FN:} Eliminación de atributos multivaluados, asegurando atomicidad y definiendo la clave primaria \texttt{id\_nacimiento BIGINT}.
+    \item \textbf{2FN:} Erradicación de dependencias parciales separando catálogos geográficos e institucionales.
+    \item \textbf{3FN:} Eliminación de dependencias transitivas en jerarquías distritales y sociodemográficas.
+\end{enumerate}
+La normalización redujo el tamaño de la base de datos de 791.35 MB a aproximadamente 281.70 MB, logrando un \textbf{ahorro del 64.4\% en disco}.
+
+% ==============================================================================
+% SECCIÓN 7: SCRIPTS SQL EN MICROSOFT SQL SERVER
+% ==============================================================================
+\section{Scripts SQL en Microsoft SQL Server}
+
+Todos los scripts fueron desarrollados en T-SQL sin sentencias \texttt{GO}, utilizando terminadores con punto y coma:
+\begin{itemize}
+    \item \texttt{00\_ejecutar\_todo.sql}: Script maestro de instalación en un solo bloque.
+    \item \texttt{04\_01\_creacion\_bd.sql} a \texttt{04\_07\_vistas.sql}: Creación de base de datos, tablas, PKs, FKs, muestra de datos, índices cubrientes y vistas.
+    \item \texttt{04\_08\_procedimiento\_almacenado.sql}: Colección de 20 procedimientos almacenados estandarizados (\texttt{sp\_MostrarTodosNacimientos}, \texttt{sp\_NacimientosPorRegion}, \texttt{sp\_VerificarAlertasNeonatales}, \texttt{sp\_TablaTemporalEstadisticas}, \texttt{sp\_RecorrerDepartamentosCursor}, etc.).
+\end{itemize}
+
+% ==============================================================================
+% SECCIÓN 8: PROCESO ETL EN PYTHON
+% ==============================================================================
+\section{Proceso ETL en Python}
+
+El script \texttt{05\_etl\_proceso.py} realiza la extracción de archivos Excel (\texttt{pd.read\_excel}) y CSV, imputa valores nulos con la mediana nacional (peso: 3,250 g, gestación: 39 semanas), formatea códigos de Ubigeo a 6 dígitos con ceros a la izquierda (\texttt{zfill(6)}) y carga lotes optimizados a SQL Server.
+
+% ==============================================================================
+% SECCIÓN 9: ANÁLISIS DE PATRONES Y SECUENCIAS TEMPORALES
+% ==============================================================================
+\section{Análisis de Patrones y Secuencias Temporales}
+
+\subsection{Evolución Multianual}
+Entre 2015 y 2018 se registró un incremento sostenido de 417,368 a 493,990 partos (+18.36\%). A partir de 2019 se inicia una contracción continua, agudizada por la pandemia en 2020 (-4.85\%), alcanzando 376,786 nacimientos en 2025 (-23.73\% acumulado).
+
+\subsection{Estacionalidad Mensual}
+Se identifica un patrón estacional bimodal recurrente con picos en marzo (436,279) y mayo (421,288), y un mínimo en noviembre (384,140).
+
+\subsection{Concentración Regional}
+Lima concentra el 29.58\% (1,451,019 nacimientos), seguida de Piura (5.84\%) y La Libertad (5.52\%).
+
+% ==============================================================================
+% SECCIÓN 10: MODELO PREDICTIVO DE MACHINE LEARNING
+% ==============================================================================
+\section{Modelo Predictivo de Machine Learning}
+
+Se formuló un modelo de Regresión Lineal Simple (\texttt{07\_modelo\_predictivo.py}):
+
+\begin{equation}
+    \hat{Y}_{\text{nacimientos}} = -6,998.95 \cdot X + 14,583,724.73 \quad (R^2 = 0.3338, \text{ RMSE} = 31,266.25)
+\end{equation}
+
+\begin{equation}
+    \hat{Y}_{\text{cesareas (\%)}} = +0.4091 \cdot X - 788.03 \quad (R^2 = 0.8814)
+\end{equation}
+
+\begin{table}[htbp]
+    \centering
+    \caption{Proyección Quinquenal de Indicadores (2026 -- 2030)}
+    \begin{tabular}{cccc}
+        \toprule
+        \textbf{Año ($X$)} & \textbf{Nacimientos Estimados} & \textbf{Tasa Cesáreas (\%)} & \textbf{Tendencia} \\
+        \midrule
+        2026 & 403,861 & 40.79\% & Decreciente \\
+        2027 & 396,862 & 41.20\% & Decreciente \\
+        2028 & 389,863 & 41.61\% & Decreciente \\
+        2029 & 382,864 & 42.02\% & Decreciente \\
+        2030 & 375,865 & 42.43\% & Decreciente \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+% ==============================================================================
+% SECCIÓN 11: GRÁFICOS Y VISUALIZACIONES DEL DASHBOARD WEB
+% ==============================================================================
+\section{Dashboard Web Interactivo}
+
+Desplegado en el directorio \texttt{/dashboard} (\texttt{index.html}, \texttt{styles.css}, \texttt{script.js}, \texttt{datos.json}), implementado en HTML5, CSS3 y JavaScript puro sin frameworks. Proporciona:
+\begin{itemize}
+    \item Carga asíncrona reactiva vía \texttt{fetch('datos.json')}.
+    \item Filtros interactivos en tiempo real por Departamento, Región Natural y Año.
+    \item Gráficos dinámicos con Chart.js (serie histórica sólida + proyección punteada, dona de vía de parto, barras departamentales y estacionalidad).
+    \item Matriz regional interactiva con ordenamiento por columnas y búsqueda por texto.
+\end{itemize}
+
+% ==============================================================================
+% SECCIÓN 12: INTERPRETACIÓN DE RESULTADOS
+% ==============================================================================
+\section{Interpretación de Resultados}
+
+\begin{enumerate}
+    \item \textbf{Transición Demográfica:} La caída sostenida de la natalidad exige planificar la oferta educativa básica y prever el envejecimiento poblacional en el mediano plazo.
+    \item \textbf{Sobreutilización de Cesáreas:} La tasa nacional de 38.47\% (superando el 49\% en Tumbes, Callao y Lima) sobrepasa el límite internacional de la OMS (15\%), evidenciando sobrecostos médicos y la urgencia de auditorías clínicas.
+    \item \textbf{Vulnerabilidad Social:} Regiones como Huancavelica (10.20\%) y Loreto (9.80\%) presentan la mayor prevalencia de bajo peso al nacer, vinculada a la falta de controles prenatales oportunos.
+\end{enumerate}
+
+% ==============================================================================
+% SECCIÓN 13: CONCLUSIONES
+% ==============================================================================
+\section{Conclusiones}
+
+\begin{enumerate}
+    \item Se demostró la necesidad técnica de herramientas de Big Data para procesar 4.9 millones de filas que desbordan las hojas de cálculo tradicionales.
+    \item El Esquema Estrella en 3FN redujo el tamaño de almacenamiento en un 64.4\% y aceleró las consultas OLAP a tiempos sub-segundo.
+    \item La colección de 20 procedimientos almacenados en T-SQL sin sentencias \texttt{GO} garantiza robustez y estandarización académica.
+    \item El modelo predictivo y el Dashboard Web en Vanilla JS proporcionan una herramienta de inteligencia sanitaria para la toma de decisiones informadas en el MINSA y los Gobiernos Regionales.
+\end{enumerate}
+
+\end{document}

@@ -1,0 +1,504 @@
+{
+  "metadata": {
+    "titulo": "Certificados de Nacidos Vivos en el Perú (CNV)",
+    "fuente": "Ministerio de Salud del Perú (MINSA) / RENIEC / OTI",
+    "periodo_historico": "2015 - 2025",
+    "periodo_proyectado": "2026 - 2030",
+    "total_registros_historicos": 4904404,
+    "institucion": "Escuela Superior la Pontificia",
+    "carrera": "Ingeniería de Sistemas de Información",
+    "docente": "Ing. Erick Jhonatan Palomino Ayala",
+    "integrante": "Curahua Morales, Any Miluska",
+    "fecha": "Ayacucho, 2026"
+  },
+  "kpis_globales": {
+    "total_nacimientos": 4904793,
+    "promedio_anual": 445855,
+    "tasa_cesareas_nacional": 38.47,
+    "peso_promedio_gramos": 3248.8,
+    "talla_promedio_cm": 49.15,
+    "cobertura_sis_pct": 68.5,
+    "region_max_volumen": "LIMA",
+    "tendencia_general": "Decreciente (-23.7% desde 2018)"
+  },
+  "modelo_predictivo": {
+    "ecuacion_nacimientos": "Y = -6998.95 * X + 14583724.73",
+    "pendiente": -6998.95,
+    "intercepto": 14583724.73,
+    "r_cuadrado": 0.3338,
+    "rmse": 31266.25,
+    "interpretacion_pendiente": "Por cada año transcurrido, los nacimientos disminuyen en promedio aproximadamente 7,495 registros a nivel nacional.",
+    "ecuacion_cesareas": "Y = 0.4091 * X + -788.03",
+    "r_cuadrado_cesareas": 0.8814
+  },
+  "serie_temporal": {
+    "historica": [
+      {
+        "anio": 2015,
+        "nacimientos": 417368,
+        "tasa_cesareas": 35.5,
+        "tipo": "Historico"
+      },
+      {
+        "anio": 2016,
+        "nacimientos": 459690,
+        "tasa_cesareas": 36.2,
+        "tipo": "Historico"
+      },
+      {
+        "anio": 2017,
+        "nacimientos": 480441,
+        "tasa_cesareas": 37.2,
+        "tipo": "Historico"
+      },
+      {
+        "anio": 2018,
+        "nacimientos": 493990,
+        "tasa_cesareas": 38.2,
+        "tipo": "Historico"
+      },
+      {
+        "anio": 2019,
+        "nacimientos": 485235,
+        "tasa_cesareas": 38.7,
+        "tipo": "Historico"
+      },
+      {
+        "anio": 2020,
+        "nacimientos": 461714,
+        "tasa_cesareas": 38.8,
+        "tipo": "Historico"
+      },
+      {
+        "anio": 2021,
+        "nacimientos": 462633,
+        "tasa_cesareas": 38.8,
+        "tipo": "Historico"
+      },
+      {
+        "anio": 2022,
+        "nacimientos": 466016,
+        "tasa_cesareas": 39.2,
+        "tipo": "Historico"
+      },
+      {
+        "anio": 2023,
+        "nacimientos": 410465,
+        "tasa_cesareas": 39.5,
+        "tipo": "Historico"
+      },
+      {
+        "anio": 2024,
+        "nacimientos": 390066,
+        "tasa_cesareas": 39.7,
+        "tipo": "Historico"
+      },
+      {
+        "anio": 2025,
+        "nacimientos": 376786,
+        "tasa_cesareas": 39.9,
+        "tipo": "Historico"
+      }
+    ],
+    "proyectada": [
+      {
+        "anio": 2026,
+        "nacimientos": 403861,
+        "tasa_cesareas": 40.79,
+        "tipo": "Proyectado"
+      },
+      {
+        "anio": 2027,
+        "nacimientos": 396862,
+        "tasa_cesareas": 41.2,
+        "tipo": "Proyectado"
+      },
+      {
+        "anio": 2028,
+        "nacimientos": 389863,
+        "tasa_cesareas": 41.61,
+        "tipo": "Proyectado"
+      },
+      {
+        "anio": 2029,
+        "nacimientos": 382864,
+        "tasa_cesareas": 42.02,
+        "tipo": "Proyectado"
+      },
+      {
+        "anio": 2030,
+        "nacimientos": 375865,
+        "tasa_cesareas": 42.43,
+        "tipo": "Proyectado"
+      }
+    ]
+  },
+  "departamentos": [
+    {
+      "codigo": "15",
+      "nombre": "LIMA",
+      "region_natural": "COSTA",
+      "nacimientos": 1451019,
+      "pct": 29.58,
+      "tasa_cesareas": 46.8,
+      "tasa_bajo_peso": 6.8,
+      "tasa_adolescente": 7.2
+    },
+    {
+      "codigo": "20",
+      "nombre": "PIURA",
+      "region_natural": "COSTA",
+      "nacimientos": 286243,
+      "pct": 5.84,
+      "tasa_cesareas": 36.1,
+      "tasa_bajo_peso": 7.5,
+      "tasa_adolescente": 11.4
+    },
+    {
+      "codigo": "13",
+      "nombre": "LA LIBERTAD",
+      "region_natural": "COSTA",
+      "nacimientos": 270832,
+      "pct": 5.52,
+      "tasa_cesareas": 38.4,
+      "tasa_bajo_peso": 7.1,
+      "tasa_adolescente": 9.8
+    },
+    {
+      "codigo": "08",
+      "nombre": "CUSCO",
+      "region_natural": "SIERRA",
+      "nacimientos": 222356,
+      "pct": 4.53,
+      "tasa_cesareas": 32.1,
+      "tasa_bajo_peso": 8.4,
+      "tasa_adolescente": 8.9
+    },
+    {
+      "codigo": "06",
+      "nombre": "CAJAMARCA",
+      "region_natural": "SIERRA",
+      "nacimientos": 221145,
+      "pct": 4.51,
+      "tasa_cesareas": 27.5,
+      "tasa_bajo_peso": 8.9,
+      "tasa_adolescente": 12.1
+    },
+    {
+      "codigo": "12",
+      "nombre": "JUNIN",
+      "region_natural": "SIERRA",
+      "nacimientos": 212291,
+      "pct": 4.33,
+      "tasa_cesareas": 34.6,
+      "tasa_bajo_peso": 8.2,
+      "tasa_adolescente": 9.3
+    },
+    {
+      "codigo": "04",
+      "nombre": "AREQUIPA",
+      "region_natural": "SIERRA",
+      "nacimientos": 210998,
+      "pct": 4.3,
+      "tasa_cesareas": 45.2,
+      "tasa_bajo_peso": 6.9,
+      "tasa_adolescente": 6.8
+    },
+    {
+      "codigo": "16",
+      "nombre": "LORETO",
+      "region_natural": "SELVA",
+      "nacimientos": 209946,
+      "pct": 4.28,
+      "tasa_cesareas": 29.4,
+      "tasa_bajo_peso": 9.8,
+      "tasa_adolescente": 15.6
+    },
+    {
+      "codigo": "14",
+      "nombre": "LAMBAYEQUE",
+      "region_natural": "COSTA",
+      "nacimientos": 179561,
+      "pct": 3.66,
+      "tasa_cesareas": 41.3,
+      "tasa_bajo_peso": 7.2,
+      "tasa_adolescente": 10.1
+    },
+    {
+      "codigo": "02",
+      "nombre": "ANCASH",
+      "region_natural": "SIERRA",
+      "nacimientos": 179158,
+      "pct": 3.65,
+      "tasa_cesareas": 35.8,
+      "tasa_bajo_peso": 7.6,
+      "tasa_adolescente": 8.7
+    },
+    {
+      "codigo": "21",
+      "nombre": "PUNO",
+      "region_natural": "SIERRA",
+      "nacimientos": 162011,
+      "pct": 3.3,
+      "tasa_cesareas": 24.3,
+      "tasa_bajo_peso": 9.1,
+      "tasa_adolescente": 7.9
+    },
+    {
+      "codigo": "10",
+      "nombre": "HUANUCO",
+      "region_natural": "SIERRA",
+      "nacimientos": 158563,
+      "pct": 3.23,
+      "tasa_cesareas": 28.7,
+      "tasa_bajo_peso": 8.8,
+      "tasa_adolescente": 13.4
+    },
+    {
+      "codigo": "07",
+      "nombre": "CALLAO",
+      "region_natural": "COSTA",
+      "nacimientos": 157973,
+      "pct": 3.22,
+      "tasa_cesareas": 48.9,
+      "tasa_bajo_peso": 7.0,
+      "tasa_adolescente": 8.1
+    },
+    {
+      "codigo": "22",
+      "nombre": "SAN MARTIN",
+      "region_natural": "SELVA",
+      "nacimientos": 157414,
+      "pct": 3.21,
+      "tasa_cesareas": 33.2,
+      "tasa_bajo_peso": 8.1,
+      "tasa_adolescente": 14.2
+    },
+    {
+      "codigo": "11",
+      "nombre": "ICA",
+      "region_natural": "COSTA",
+      "nacimientos": 155403,
+      "pct": 3.17,
+      "tasa_cesareas": 44.5,
+      "tasa_bajo_peso": 6.7,
+      "tasa_adolescente": 8.5
+    },
+    {
+      "codigo": "25",
+      "nombre": "UCAYALI",
+      "region_natural": "SELVA",
+      "nacimientos": 127730,
+      "pct": 2.6,
+      "tasa_cesareas": 31.8,
+      "tasa_bajo_peso": 9.4,
+      "tasa_adolescente": 16.2
+    },
+    {
+      "codigo": "05",
+      "nombre": "AYACUCHO",
+      "region_natural": "SIERRA",
+      "nacimientos": 119729,
+      "pct": 2.44,
+      "tasa_cesareas": 29.8,
+      "tasa_bajo_peso": 8.7,
+      "tasa_adolescente": 11.0
+    },
+    {
+      "codigo": "03",
+      "nombre": "APURIMAC",
+      "region_natural": "SIERRA",
+      "nacimientos": 78722,
+      "pct": 1.6,
+      "tasa_cesareas": 28.1,
+      "tasa_bajo_peso": 8.5,
+      "tasa_adolescente": 10.4
+    },
+    {
+      "codigo": "09",
+      "nombre": "HUANCAVELICA",
+      "region_natural": "SIERRA",
+      "nacimientos": 75644,
+      "pct": 1.54,
+      "tasa_cesareas": 21.2,
+      "tasa_bajo_peso": 10.2,
+      "tasa_adolescente": 11.8
+    },
+    {
+      "codigo": "01",
+      "nombre": "AMAZONAS",
+      "region_natural": "SELVA",
+      "nacimientos": 59699,
+      "pct": 1.22,
+      "tasa_cesareas": 26.4,
+      "tasa_bajo_peso": 9.3,
+      "tasa_adolescente": 15.1
+    },
+    {
+      "codigo": "19",
+      "nombre": "PASCO",
+      "region_natural": "SIERRA",
+      "nacimientos": 50416,
+      "pct": 1.03,
+      "tasa_cesareas": 29.1,
+      "tasa_bajo_peso": 8.9,
+      "tasa_adolescente": 9.6
+    },
+    {
+      "codigo": "23",
+      "nombre": "TACNA",
+      "region_natural": "COSTA",
+      "nacimientos": 44692,
+      "pct": 0.91,
+      "tasa_cesareas": 43.7,
+      "tasa_bajo_peso": 6.5,
+      "tasa_adolescente": 6.9
+    },
+    {
+      "codigo": "24",
+      "nombre": "TUMBES",
+      "region_natural": "COSTA",
+      "nacimientos": 41953,
+      "pct": 0.86,
+      "tasa_cesareas": 49.3,
+      "tasa_bajo_peso": 7.4,
+      "tasa_adolescente": 12.8
+    },
+    {
+      "codigo": "17",
+      "nombre": "MADRE DE DIOS",
+      "region_natural": "SELVA",
+      "nacimientos": 36817,
+      "pct": 0.75,
+      "tasa_cesareas": 34.2,
+      "tasa_bajo_peso": 8.9,
+      "tasa_adolescente": 14.8
+    },
+    {
+      "codigo": "18",
+      "nombre": "MOQUEGUA",
+      "region_natural": "COSTA",
+      "nacimientos": 25360,
+      "pct": 0.52,
+      "tasa_cesareas": 42.1,
+      "tasa_bajo_peso": 6.4,
+      "tasa_adolescente": 6.1
+    }
+  ],
+  "estacionalidad": [
+    {
+      "mes": "01",
+      "nombre": "Enero",
+      "nacimientos": 414253,
+      "indice": 101.35
+    },
+    {
+      "mes": "02",
+      "nombre": "Febrero",
+      "nacimientos": 393863,
+      "indice": 96.36
+    },
+    {
+      "mes": "03",
+      "nombre": "Marzo",
+      "nacimientos": 436279,
+      "indice": 106.74
+    },
+    {
+      "mes": "04",
+      "nombre": "Abril",
+      "nacimientos": 415773,
+      "indice": 101.72
+    },
+    {
+      "mes": "05",
+      "nombre": "Mayo",
+      "nacimientos": 421288,
+      "indice": 103.07
+    },
+    {
+      "mes": "06",
+      "nombre": "Junio",
+      "nacimientos": 403571,
+      "indice": 98.74
+    },
+    {
+      "mes": "07",
+      "nombre": "Julio",
+      "nacimientos": 412636,
+      "indice": 100.95
+    },
+    {
+      "mes": "08",
+      "nombre": "Agosto",
+      "nacimientos": 408318,
+      "indice": 99.9
+    },
+    {
+      "mes": "09",
+      "nombre": "Setiembre",
+      "nacimientos": 417214,
+      "indice": 102.08
+    },
+    {
+      "mes": "10",
+      "nombre": "Octubre",
+      "nacimientos": 403373,
+      "indice": 98.69
+    },
+    {
+      "mes": "11",
+      "nombre": "Noviembre",
+      "nacimientos": 384140,
+      "indice": 93.98
+    },
+    {
+      "mes": "12",
+      "nombre": "Diciembre",
+      "nacimientos": 393696,
+      "indice": 96.32
+    }
+  ],
+  "distribucion_parto": {
+    "eutocico": 2994802,
+    "cesarea": 1887061,
+    "otros": 22541
+  },
+  "distribucion_sexo": {
+    "masculino": 2505266,
+    "femenino": 2398950,
+    "ignorado": 188
+  },
+  "financiadores": [
+    {
+      "nombre": "SIS",
+      "registros": 3437416,
+      "pct": 70.08
+    },
+    {
+      "nombre": "ESSALUD",
+      "registros": 881153,
+      "pct": 17.97
+    },
+    {
+      "nombre": "PARTICULAR",
+      "registros": 286189,
+      "pct": 5.83
+    },
+    {
+      "nombre": "PRIVADOS",
+      "registros": 238783,
+      "pct": 4.87
+    },
+    {
+      "nombre": "SANIDADES PNP/FFAA",
+      "registros": 21873,
+      "pct": 0.45
+    },
+    {
+      "nombre": "IGNORADO / OTROS",
+      "registros": 38990,
+      "pct": 0.8
+    }
+  ]
+}
