@@ -1,199 +1,343 @@
-# ESCUELA SUPERIOR LA PONTIFICIA
-## CARRERA PROFESIONAL DE INGENIERÍA DE SISTEMAS DE INFORMACIÓN
-### CICLO: VIII – B
-#### CURSO: GESTIÓN DE BASE DE DATOS
+# ESCUELA DE EDUCACIÓN SUPERIOR TECNOLÓGICA LA PONTIFICIA
+## DIRECCIÓN ACADÉMICA | CARRERAS PROFESIONALES
+### CARRERA: INGENIERÍA DE SISTEMAS DE INFORMACIÓN | CICLO: VIII – B
+#### CURSO: GESTIÓN DE BASE DE DATOS / BIG DATA
 ##### DOCENTE: ING. ERICK JHONATAN PALOMINO AYALA
 ###### AYACUCHO, 2026
 
 ---
 
-# GESTIÓN DE BASE DE DATOS Y BIG DATA CON DATOS ABIERTOS REALES: ARQUITECTURA DIMENSIONAL, NORMALIZACIÓN 3FN, PIPELINE ETL, MODELO PREDICTIVO Y DASHBOARD DE CERTIFICADOS DE NACIDOS VIVOS EN EL PERÚ (CNV 2015 - 2025)
+# INFORME TÉCNICO FINAL: BIG DATA CON DATOS ABIERTOS REALES
+# "Gestión de Base de Datos, Modelo Entidad-Relación, Normalización 3FN, Pipeline ETL, Análisis de Patrones, Modelo Predictivo de Machine Learning y Dashboard Interactivo del Certificado de Nacido Vivo en el Perú (CNV 2015 - 2025)"
 
-**Integrantes:**
+**Estudiante / Integrante:**
 * Curahua Morales, Any Miluska
 
 ---
 
-## ÍNDICE GENERAL
+## ÍNDICE DEL INFORME TÉCNICO
 
-1. [Introducción](#1-introducción)
-2. [Objetivos](#2-objetivos)
-3. [Fuente Oficial de los Datos](#3-fuente-oficial-de-los-datos)
-4. [Descripción del Dataset](#4-descripción-del-dataset)
-5. [Modelo Entidad-Relación (E-R) y Arquitectura Dimensional](#5-modelo-entidad-relación-e-r-y-arquitectura-dimensional)
-6. [Proceso de Normalización (1FN, 2FN y 3FN)](#6-proceso-de-normalización-1fn-2fn-y-3fn)
-7. [Scripts SQL en Microsoft SQL Server](#7-scripts-sql-en-microsoft-sql-server)
-8. [Proceso de Extracción, Transformación y Carga (ETL)](#8-proceso-de-extracción-transformación-y-carga-etl)
-9. [Análisis de Patrones y Secuencias Temporales](#9-análisis-de-patrones-y-secuencias-temporales)
-10. [Modelo Predictivo de Machine Learning](#10-modelo-predictivo-de-machine-learning)
-11. [Gráficos y Visualizaciones del Dashboard Web](#11-gráficos-y-visualizaciones-del-dashboard-web)
-12. [Interpretación de Resultados](#12-interpretación-de-resultados)
-13. [Conclusiones](#13-conclusiones)
-
----
-
-## 1. INTRODUCCIÓN
-
-En la era contemporánea de la informática aplicada a las ciencias de la salud, la gestión eficiente de grandes volúmenes de datos (*Big Data*) constituye un pilar estratégico para la formulación de políticas públicas basadas en evidencia. El Estado Peruano, a través de la Plataforma Nacional de Datos Abiertos, publica los registros generados por el Certificado de Nacido Vivo en línea (CNV), administrado conjuntamente por el Ministerio de Salud (MINSA) y el Registro Nacional de Identificación y Estado Civil (RENIEC).
-
-El presente informe técnico documenta el diseño, normalización, implementación en motor relacional Microsoft SQL Server, ingeniería de datos mediante Python y desarrollo de un modelo predictivo con interfaz web interactiva sobre un conjunto masivo de **4,904,793 registros de nacimientos** ocurridos entre los años **2015 y 2025**.
+1. [Portada](#1-portada)
+2. [Introducción](#2-introducción)
+3. [Objetivos](#3-objetivos)
+4. [Fuente Oficial de los Datos](#4-fuente-oficial-de-los-datos)
+5. [Descripción del Dataset](#5-descripción-del-dataset)
+6. [Modelo Entidad–Relación](#6-modelo-entidadrelación)
+7. [Proceso de Normalización](#7-proceso-de-normalización)
+8. [Scripts SQL](#8-scripts-sql)
+9. [Proceso ETL](#9-proceso-etl)
+10. [Análisis de Patrones](#10-análisis-de-patrones)
+11. [Modelo Predictivo](#11-modelo-predictivo)
+12. [Gráficos y Visualizaciones](#12-gráficos-y-visualizaciones)
+13. [Interpretación de Resultados](#13-interpretación-de-resultados)
+14. [Conclusiones](#14-conclusiones)
 
 ---
 
-## 2. OBJETIVOS
+## 1. PORTADA
 
-### 2.1. Objetivo General
-Diseñar e implementar una solución integral de base de datos relacional y analítica para procesar, normalizar, predecir y visualizar los patrones sociodemográficos y clínicos de los nacidos vivos en el Perú durante el período 2015 - 2025.
-
-### 2.2. Objetivos Específicos
-1. Demostrar técnicamente la necesidad de arquitecturas Big Data ante el desbordamiento de herramientas ofimáticas convencionales como Microsoft Excel.
-2. Construir un modelo relacional en Esquema Estrella y aplicar la normalización formal hasta la Tercera Forma Normal (3FN) para erradicar redundancias y anomalías.
-3. Generar los scripts modulares en T-SQL para Microsoft SQL Server (sin sentencias `GO`), incluyendo tablas, restricciones de clave primaria y foránea, índices cubrientes, vistas y una colección de 20 procedimientos almacenados estandarizados.
-4. Desarrollar un pipeline ETL en Python con la librería Pandas para la extracción, limpieza, imputación y carga de datos limpios.
-5. Formular un modelo predictivo basado en Regresión Lineal para proyectar la natalidad y la tasa de cesáreas hacia el quinquenio 2026 - 2030.
-6. Construir un Dashboard Web interactivo y responsivo en HTML, CSS y Vanilla JavaScript que consuma datos reales en formato JSON y proporcione analítica en tiempo real.
+* **Institución:** Escuela de Educación Superior Tecnológica La Pontificia.
+* **Dirección:** Dirección Académica - Carreras Profesionales.
+* **Carrera Profesional:** Ingeniería de Sistemas de Información (Ciclo: VIII – B).
+* **Asignatura:** Gestión de Base de Datos / Big Data.
+* **Docente Responsable:** Ing. Erick Jhonatan Palomino Ayala.
+* **Título del Proyecto:** *Big Data con Datos Abiertos Reales: Certificado de Nacido Vivo (CNV Perú 2015-2025)*.
+* **Autora:** Curahua Morales, Any Miluska.
+* **Lugar y Fecha:** Ayacucho, Perú - 2026.
 
 ---
 
-## 3. FUENTE OFICIAL DE LOS DATOS
+## 2. INTRODUCCIÓN
 
-* **Entidad Emisora / Custodio:** Ministerio de Salud del Perú (MINSA) / Registro Nacional de Identificación y Estado Civil (RENIEC) / Oficina de Tecnologías de la Información (OTI).
-* **Plataforma de Descarga:** Plataforma Nacional de Datos Abiertos ([datosabiertos.gob.pe](https://www.datosabiertos.gob.pe/)).
-* **Dataset Oficial:** *Registros de Nacidos Vivos en el Perú 2026 (Certificado de Nacido Vivo - CNV)*.
-* **Cobertura Temporal:** 11 años continuos analizados (**2015 al 2025**).
-* **Volumen Físico:** **4,904,793 filas**, 22 variables y un peso de **791.35 MB**.
+El análisis de grandes volúmenes de información (*Big Data*) en el sector salud es esencial para comprender la dinámica poblacional, evaluar la calidad asistencial y orientar la asignación de recursos públicos. En el Perú, los nacimientos son registrados mediante el sistema del Certificado de Nacido Vivo en línea (CNV), administrado por el Ministerio de Salud (MINSA) y el Registro Nacional de Identificación y Estado Civil (RENIEC).
+
+El presente informe desarrolla un proyecto integral de ingeniería de datos y Big Data sobre **4,904,793 registros de nacimientos (2015-2025)**, abarcando desde la justificación técnica por el desbordamiento de hojas de cálculo tradicionales (Microsoft Excel), el diseño relacional normalizado en 3FN, la implementación física en Microsoft SQL Server, el desarrollo de un pipeline ETL automatizado en Python, el análisis de patrones y estacionalidad, el entrenamiento de un modelo predictivo por regresión lineal hacia el quinquenio 2026-2030, y el despliegue de un Dashboard Web interactivo en Vanilla JavaScript.
 
 ---
 
-## 4. DESCRIPCIÓN DEL DATASET
+## 3. OBJETIVOS
 
-### 4.1. Justificación Cuantitativa de Big Data
-El límite físico de una hoja de cálculo en Microsoft Excel es de **1,048,576 filas**. El dataset oficial del CNV cuenta con **4,904,793 filas**, superando dicho límite en **367.8% (4.68 veces el tamaño máximo admisible)**. La persistencia y el análisis en archivos planos tradicionales genera bloqueos por falta de memoria y pérdida irrecuperable de más de 3.85 millones de registros.
+### 3.1. Objetivo General
+Desarrollar un proyecto integral de Big Data utilizando el conjunto de datos abiertos oficiales de los Certificados de Nacidos Vivos del Perú (2015-2025), aplicando técnicas avanzadas de bases de datos relacionales, normalización 3FN, pipeline ETL, análisis de patrones temporales y modelos predictivos de aprendizaje automático.
+
+### 3.2. Objetivos Específicos
+1. Seleccionar y diagnosticar una fuente oficial masiva con millones de registros de la Plataforma Nacional de Datos Abiertos Perú.
+2. Construir el Modelo Entidad-Relación identificando entidades principales, auxiliares y sus cardinalidades (1:N).
+3. Aplicar el proceso formal de normalización (1FN, 2FN y 3FN), justificando la eliminación de datos redundantes y la corrección de dependencias funcionales.
+4. Implementar los scripts modulares en Microsoft SQL Server (DDL, DML, restricciones PK/FK, índices cubrientes, vistas y 20 procedimientos almacenados estandarizados).
+5. Construir un pipeline ETL en Python (Pandas) para la extracción, limpieza, imputación de nulos y carga estructurada.
+6. Analizar patrones multianuales, estacionalidad mensual y brechas territoriales, respondiendo a las preguntas de investigación sanitaria.
+7. Entrenar un modelo de Machine Learning (Regresión Lineal OLS) para proyectar la natalidad y tasa de cesáreas al período 2026-2030.
+8. Desplegar un Dashboard Web interactivo en Vanilla JS sin frameworks, responsive y sin emojis para visualización de KPIs.
+
+---
+
+## 4. FUENTE OFICIAL DE LOS DATOS
+
+* **Plataforma Utilizada:** Plataforma Nacional de Datos Abiertos del Estado Peruano ([https://www.datosabiertos.gob.pe](https://www.datosabiertos.gob.pe)).
+* **Custodio Oficial:** Ministerio de Salud del Perú (MINSA) / RENIEC / Oficina de Tecnologías de la Información (OTI).
+* **Nombre del Dataset Seleccionado:** *Registros de Nacidos Vivos en el Perú 2026 (Certificado de Nacido Vivo - CNV)*.
+* **Año o Período de los Datos:** **2015 al 2025** (11 años completos continuos).
+* **Número Aproximado de Registros:** **4,904,793 filas** oficiales procesadas.
+
+---
+
+## 5. DESCRIPCIÓN DEL DATASET
+
+### 5.1. Características Generales
+* **Total de Registros:** **4,904,793 filas**.
+* **Total de Variables:** **22 columnas**.
+* **Tamaño del Archivo Plano:** **791.35 MB**.
+* **Demostración de Big Data:** El límite máximo de Microsoft Excel es de **1,048,576 filas**. El dataset del CNV supera este límite en **4.68 veces (367.8% de exceso)**, imposibilitando su tratamiento en Excel por desbordamiento de memoria y pérdida de más de 3.85 millones de registros.
 
 ```text
-Capacidad Máxima de Microsoft Excel:  [ 1,048,576 filas ]
-Volumen Real del Dataset CNV Perú:    [ 4,904,793 filas ] (+367.8% de exceso)
+Capacidad Máxima de Excel:  [ 1,048,576 filas ]
+Volumen Real del CNV Perú:  [ 4,904,793 filas ] (+367.8% de exceso)
 ```
 
-### 4.2. Diccionario de Variables Principales
-El conjunto de datos comprende 22 atributos categorizados en tres dimensiones clínicas:
-1. **Variables Biométricas del Neonato:** `FecNac_Año`, `FecNac_Mes`, `PESO_NACIDO` (g), `TALLA_NACIDO` (cm), `DUR_EMB_PARTO` (semanas), `sexo_nacido`.
-2. **Variables Sociodemográficas de la Madre:** `Edad_Madre`, `Estado_Civil`, `Nivel_Intrucción_Madre`, `DESC_OCUPACION`, `Num_embar_madre`, `Hijos_vivo_madre`, `Hijos_fallec_madre`, `nacmuer_abort_madre`, `Pais_Madre`.
-3. **Variables Asistenciales y Geográficas:** `IdUbigeoInei` (código de 6 dígitos), `Ipress` (código de establecimiento de salud), `Condicion_Parto` (Eutócico vs Cesárea), `Tipo_Parto` (Único vs Múltiple), `Lugar_Nacido`, `Atiende_Parto`, `Financiador_Parto` (SIS vs EsSalud vs Privados).
+### 5.2. Diccionario de Variables y Tipos de Datos
+
+| Variable | Tipo de Dato | Categoría | Descripción Técnica |
+| :--- | :--- | :--- | :--- |
+| `FecNac_Año` | Numérico (`INT`) | Temporal | Año de ocurrencia del nacimiento (2015 - 2025). |
+| `FecNac_Mes` | Numérico (`INT`) | Temporal | Mes cronológico de ocurrencia (1 al 12). |
+| `PESO_NACIDO` | Numérico (`DECIMAL`) | Biométrico | Peso del recién nacido en gramos (200 - 8,000 g). |
+| `TALLA_NACIDO` | Numérico (`DECIMAL`) | Biométrico | Talla del neonato en centímetros (15 - 80 cm). |
+| `DUR_EMB_PARTO` | Numérico (`INT`) | Gestacional | Semanas completas de gestación (18 - 46 semanas). |
+| `sexo_nacido` | Texto (`VARCHAR`) | Biométrico | Sexo biológico (MASCULINO, FEMENINO). |
+| `Edad_Madre` | Numérico (`INT`) | Materno | Edad de la madre al momento del parto (8 - 65 años). |
+| `Estado_Civil` | Texto (`VARCHAR`) | Materno | Estado conyugal (SOLTERA, CASADA, CONVIVIENTE). |
+| `Nivel_Intrucción_Madre` | Texto (`VARCHAR`) | Materno | Nivel educativo máximo alcanzado. |
+| `DESC_OCUPACION` | Texto (`VARCHAR`) | Materno | Ocupación o actividad económica de la madre. |
+| `Num_embar_madre` | Texto / Numérico | Obstétrico | Historial de gestaciones previas. |
+| `Hijos_vivo_madre` | Texto / Numérico | Obstétrico | Número de hijos nacidos vivos previos. |
+| `Hijos_fallec_madre` | Texto / Numérico | Obstétrico | Número de hijos fallecidos. |
+| `nacmuer_abort_madre` | Texto / Numérico | Obstétrico | Historial de pérdidas gestacionales / abortos. |
+| `Pais_Madre` | Texto (`VARCHAR`) | Geográfico | País de nacionalidad de la gestante (PERU...). |
+| `IdUbigeoInei` | Texto (`VARCHAR(6)`) | Geográfico | Código oficial Ubigeo INEI de 6 dígitos del distrito. |
+| `Ipress` | Texto (`VARCHAR(10)`) | Asistencial | Código Único RENIPRESS del establecimiento de salud. |
+| `Condicion_Parto` | Texto (`VARCHAR`) | Clínico | Condición de la vía de parto (EUTOCICO, CESAREA). |
+| `Tipo_Parto` | Texto (`VARCHAR`) | Obstétrico | Pluralidad (UNICO, DOBLE, TRIPLE). |
+| `Lugar_Nacido` | Texto (`VARCHAR`) | Asistencial | Entorno del parto (HOSPITAL, PUESTO, DOMICILIO). |
+| `Atiende_Parto` | Texto (`VARCHAR`) | Asistencial | Personal que asistió (OBSTETRA, MEDICO...). |
+| `Financiador_Parto` | Texto (`VARCHAR`) | Financiero | Régimen de aseguramiento (SIS, ESSALUD, PRIVADO). |
+
+### 5.3. Problema Social o Público a Estudiar
+1. **Transición Demográfica y Descenso de la Natalidad:** Evaluación de la caída interanual de nacimientos y su impacto en el bono demográfico.
+2. **Sobre-intervención Quirúrgica (Cesáreas):** Comparación de la tasa nacional (38.47%) frente al límite de la OMS (15.0%).
+3. **Factores de Riesgo Neonatal:** Prevalencia de bajo peso al nacer (<2,500g) y prematurez (<37 sem) asociada a determinantes socioeconómicos maternos.
 
 ---
 
-## 5. MODELO ENTIDAD-RELACIÓN (E-R) Y ARQUITECTURA DIMENSIONAL
+## 6. MODELO ENTIDAD–RELACIÓN
 
-Para optimizar las consultas analíticas de agregación masiva (OLAP), se diseñó un **Esquema Estrella (Star Schema)** híbrido relacional compuesto por una tabla principal de hechos y seis tablas dimensionales maestras:
+### 6.1. Identificación de Entidades y Arquitectura
+Se construyó un modelo relacional dimensional en **Esquema Estrella (Star Schema)**:
+* **Tabla Principal (Hechos):** `FACT_NACIMIENTO` (almacena el evento atómico del parto con 4.9M de filas, claves foráneas numéricas y banderas precalculadas: `es_bajo_peso`, `es_prematuro`, `es_madre_adolescente`, `es_cesarea`).
+* **Tablas Auxiliares (Dimensiones Maestras):**
+  1. `DIM_TIEMPO` (Jerarquía: Año, Mes, Nombre de Mes, Trimestre, Semestre).
+  2. `DIM_UBIGEO` (Catálogo INEI: Código 6 dígitos, Departamento, Provincia, Distrito, Región Natural).
+  3. `DIM_MADRE_PERFIL` (Estado Civil, Nivel Educativo, Ocupación, País).
+  4. `DIM_CONDICION_PARTO` (Vía de Parto, Tipo de Parto, Entorno Físico).
+  5. `DIM_ATENCION_SALUD` (Personal que atiende, Financiador de Salud).
+  6. `DIM_IPRESS` (Código RENIPRESS, Nombre de Establecimiento, Categoría MINSA).
 
-* **Tabla de Hechos:** `FACT_NACIMIENTO` (almacena claves foráneas, métricas continuas de peso/talla/edad y banderas booleanas indexadas).
-* **Dimensiones Maestras:**
-  1. `DIM_TIEMPO` (Año, Mes, Nombre de Mes, Trimestre, Semestre).
-  2. `DIM_UBIGEO` (Código INEI, Departamento, Provincia, Distrito, Región Natural).
-  3. `DIM_MADRE_PERFIL` (Estado Civil, Nivel de Instrucción, Ocupación, País de Origen).
-  4. `DIM_CONDICION_PARTO` (Condición Clínica, Pluralidad de Parto, Entorno Físico).
-  5. `DIM_ATENCION_SALUD` (Personal Asistencial, Régimen de Aseguramiento).
-  6. `DIM_IPRESS` (Código Único RENIPRESS, Nombre de Establecimiento, Categoría MINSA).
+### 6.2. Diagrama Entidad–Relación (Mermaid ERD)
+
+```mermaid
+erDiagram
+    DIM_TIEMPO ||--o{ FACT_NACIMIENTO : "agrupa (1:N)"
+    DIM_UBIGEO ||--o{ FACT_NACIMIENTO : "ubica (1:N)"
+    DIM_MADRE_PERFIL ||--o{ FACT_NACIMIENTO : "caracteriza (1:N)"
+    DIM_CONDICION_PARTO ||--o{ FACT_NACIMIENTO : "clasifica (1:N)"
+    DIM_ATENCION_SALUD ||--o{ FACT_NACIMIENTO : "asiste (1:N)"
+    DIM_IPRESS ||--o{ FACT_NACIMIENTO : "atiende en (1:N)"
+
+    DIM_TIEMPO {
+        int id_tiempo PK
+        int anio
+        int mes
+        string nombre_mes
+        int trimestre
+        int semestre
+    }
+
+    DIM_UBIGEO {
+        string ubigeo_cod PK
+        string codigo_dep
+        string departamento
+        string codigo_prov
+        string provincia
+        string distrito
+        string region_natural
+    }
+
+    DIM_MADRE_PERFIL {
+        int id_madre_perfil PK
+        string estado_civil
+        string nivel_instruccion
+        string ocupacion
+        string pais_origen
+    }
+
+    DIM_CONDICION_PARTO {
+        int id_condicion_parto PK
+        string condicion_parto
+        string tipo_parto
+        string lugar_nacimiento
+    }
+
+    DIM_ATENCION_SALUD {
+        int id_atencion_salud PK
+        string profesional_atiende
+        string financiador
+    }
+
+    DIM_IPRESS {
+        string codigo_ipress PK
+        string nombre_establecimiento
+        string categoria_establecimiento
+    }
+
+    FACT_NACIMIENTO {
+        bigint id_nacimiento PK
+        int id_tiempo FK
+        string ubigeo_cod FK
+        int id_madre_perfil FK
+        int id_condicion_parto FK
+        int id_atencion_salud FK
+        string codigo_ipress FK
+        string sexo
+        decimal peso_gramos
+        decimal talla_cm
+        int duracion_embarazo_sem
+        int edad_madre
+        bit es_bajo_peso
+        bit es_prematuro
+        bit es_madre_adolescente
+        bit es_cesarea
+    }
+```
 
 ---
 
-## 6. PROCESO DE NORMALIZACIÓN (1FN, 2FN Y 3FN)
+## 7. PROCESO DE NORMALIZACIÓN
 
-1. **Primera Forma Normal (1FN):**
-   - Eliminación de campos combinados y garantía de atomicidad estricta en cada atributo.
-   - Creación de la clave primaria autoincremental `id_nacimiento BIGINT`.
-2. **Segunda Forma Normal (2FN):**
-   - Eliminación de dependencias funcionales parciales aislando las entidades maestras geográficas y hospitalarias.
-3. **Tercera Forma Normal (3FN):**
-   - Erradicación de dependencias transitivas en las jerarquías territoriales y perfiles maternos.
-4. **Eficiencia y Rendimiento:**
-   - Reducción del tamaño de almacenamiento de **791.35 MB (0FN) a ~281.70 MB (3FN)**, logrando un **ahorro del 64.4% de espacio en disco**.
+### 7.1. Aplicación de las Formas Normales
+* **Primera Forma Normal (1FN):**
+  - Se eliminaron atributos compuestos y multivaluados, garantizando que cada celda sea atómica e indivisible.
+  - Se estableció la clave primaria única `id_nacimiento BIGINT IDENTITY(1,1)`.
+* **Segunda Forma Normal (2FN):**
+  - Se eliminaron dependencias parciales aislando atributos que dependían únicamente de identificadores maestros (ej. datos geográficos del Ubigeo y nombres de hospitales de IPRESS).
+* **Tercera Forma Normal (3FN):**
+  - Se suprimieron las dependencias transitivas (ej. dependencias entre departamento, provincia y distrito dentro de la tabla de hechos, trasladándolas a `DIM_UBIGEO`).
 
----
-
-## 7. SCRIPTS SQL EN MICROSOFT SQL SERVER
-
-La implementación física se organizó en scripts estructurados en T-SQL, **sin sentencias `GO`**, con terminadores punto y coma (`;`), garantizando portabilidad y compatibilidad:
-
-* **[00_ejecutar_todo.sql](file:///c:/Users/Lara/.gemini/antigravity-ide/scratch/proyecto-bigdata-cnv/00_ejecutar_todo.sql):** Script maestro unificado de instalación completa.
-* **[04_01_creacion_bd.sql](file:///c:/Users/Lara/.gemini/antigravity-ide/scratch/proyecto-bigdata-cnv/04_01_creacion_bd.sql):** Base de datos `BD_CNV_BIGDATA_PERU` con Collation `Modern_Spanish_CI_AS`.
-* **[04_02_creacion_tablas.sql](file:///c:/Users/Lara/.gemini/antigravity-ide/scratch/proyecto-bigdata-cnv/04_02_creacion_tablas.sql):** Estructura DDL con restricciones biológicas `CHECK`.
-* **[04_03_claves_primarias.sql](file:///c:/Users/Lara/.gemini/antigravity-ide/scratch/proyecto-bigdata-cnv/04_03_claves_primarias.sql):** Restricciones `PRIMARY KEY CLUSTERED`.
-* **[04_04_claves_foraneas.sql](file:///c:/Users/Lara/.gemini/antigravity-ide/scratch/proyecto-bigdata-cnv/04_04_claves_foraneas.sql):** Restricciones `FOREIGN KEY` de integridad referencial.
-* **[04_05_insercion_muestra.sql](file:///c:/Users/Lara/.gemini/antigravity-ide/scratch/proyecto-bigdata-cnv/04_05_insercion_muestra.sql):** Poblado de muestra representativa nacional (>100 registros reales).
-* **[04_06_indices.sql](file:///c:/Users/Lara/.gemini/antigravity-ide/scratch/proyecto-bigdata-cnv/04_06_indices.sql):** Índices cubrientes (*Index Covering*) para optimizar agregaciones masivas.
-* **[04_07_vistas.sql](file:///c:/Users/Lara/.gemini/antigravity-ide/scratch/proyecto-bigdata-cnv/04_07_vistas.sql):** Vistas analíticas para monitoreo de indicadores sanitarios.
-* **[04_08_procedimiento_almacenado.sql](file:///c:/Users/Lara/.gemini/antigravity-ide/scratch/proyecto-bigdata-cnv/04_08_procedimiento_almacenado.sql):** Colección de 20 procedimientos almacenados (`sp_MostrarTodosNacimientos`, `sp_NacimientosPorRegion`, `sp_VerificarAlertasNeonatales`, `sp_TablaTemporalEstadisticas`, `sp_RecorrerDepartamentosCursor`, etc.).
+### 7.2. Justificación Cuantitativa de la Normalización
+* **Datos Repetidos Eliminados:** Cadenas de texto redundantes repetidas 4.9 millones de veces (nombres de regiones, seguros de salud, profesiones) fueron sustituidas por identificadores numéricos de 4 bytes.
+* **Ahorro de Almacenamiento:** Reducción del tamaño en disco de **791.35 MB (tabla plana) a ~281.70 MB (3FN normalizado)**, alcanzando un **ahorro del 64.4%**.
+* **Integridad y Consistencia:** Se garantizaron claves foráneas (`FOREIGN KEY`) que previenen registros huérfanos y restricciones biológicas `CHECK` (ej. peso entre 200g y 8,000g).
 
 ---
 
-## 8. PROCESO DE EXTRACCIÓN, TRANSFORMACIÓN Y CARGA (ETL)
+## 8. SCRIPTS SQL
 
-El script en Python **[05_etl_proceso.py](file:///c:/Users/Lara/.gemini/antigravity-ide/scratch/proyecto-bigdata-cnv/05_etl_proceso.py)** realiza:
-1. **Extracción:** Lectura de archivos `.xlsx` (`pandas.read_excel`) y `.csv` delimitados por punto y coma.
-2. **Transformación:**
-   - Imputación de nulos numéricos mediante la mediana nacional (peso: 3,250g, gestación: 39 semanas).
-   - Estandarización de códigos de Ubigeo a 6 dígitos mediante `zfill(6)`.
-   - Generación de campos booleanos analíticos: `es_bajo_peso` (<2,500g), `es_prematuro` (<37 semanas), `es_madre_adolescente` (<18 años) y `es_cesarea`.
-3. **Carga:** Inserción por lotes parametrizados hacia SQL Server.
+Todos los scripts T-SQL fueron construidos cumpliendo el estándar sin comandos `GO`, con terminadores punto y coma `;`:
 
----
-
-## 9. ANÁLISIS DE PATRONES Y SECUENCIAS TEMPORALES
-
-* Detalle documentado en **[06_analisis_patrones.md](file:///c:/Users/Lara/.gemini/antigravity-ide/scratch/proyecto-bigdata-cnv/06_analisis_patrones.md)**.
-* **Comportamiento Multianual:** Crecimiento sostenido entre 2015 (417,368) y 2018 (pico de 493,990 alumbramientos). A partir de 2019 se inicia una contracción continua que se agudiza en la pandemia 2020 (-4.85%) y desciende hasta **376,786 en 2025** (-23.73% acumulado).
-* **Estacionalidad Mensual:** Se comprueba un patrón bimodal recurrente con máximos en **marzo (436,279)** y **mayo (421,288)**, y un valle sistemático en **noviembre (384,140)**.
-* **Concentración Geográfica:** Lima representa el **29.58%** del total de nacimientos, seguida por Piura (5.84%) y La Libertad (5.52%).
+1. **[00_ejecutar_todo.sql](file:///c:/Users/Lara/.gemini/antigravity-ide/scratch/proyecto-bigdata-cnv/00_ejecutar_todo.sql):** Script maestro unificado que instala la base de datos, tablas, PKs, FKs, muestra, índices, vistas y procedimientos.
+2. **[04_01_creacion_bd.sql](file:///c:/Users/Lara/.gemini/antigravity-ide/scratch/proyecto-bigdata-cnv/04_01_creacion_bd.sql):** Creación de `BD_CNV_BIGDATA_PERU` con collation `Modern_Spanish_CI_AS`.
+3. **[04_02_creacion_tablas.sql](file:///c:/Users/Lara/.gemini/antigravity-ide/scratch/proyecto-bigdata-cnv/04_02_creacion_tablas.sql):** Creación de 6 tablas dimensionales y `FACT_NACIMIENTO` con restricciones `CHECK`.
+4. **[04_03_claves_primarias.sql](file:///c:/Users/Lara/.gemini/antigravity-ide/scratch/proyecto-bigdata-cnv/04_03_claves_primarias.sql):** Definición explícita de `PRIMARY KEY CLUSTERED`.
+5. **[04_04_claves_foraneas.sql](file:///c:/Users/Lara/.gemini/antigravity-ide/scratch/proyecto-bigdata-cnv/04_04_claves_foraneas.sql):** Definición de restricciones `FOREIGN KEY` de integridad referencial.
+6. **[04_05_insercion_muestra.sql](file:///c:/Users/Lara/.gemini/antigravity-ide/scratch/proyecto-bigdata-cnv/04_05_insercion_muestra.sql):** Inserción de muestra representativa nacional (>100 registros reales).
+7. **[04_06_indices.sql](file:///c:/Users/Lara/.gemini/antigravity-ide/scratch/proyecto-bigdata-cnv/04_06_indices.sql):** Creación de 4 índices cubrientes (*Covering Indexes*) para optimización de agregaciones.
+8. **[04_07_vistas.sql](file:///c:/Users/Lara/.gemini/antigravity-ide/scratch/proyecto-bigdata-cnv/04_07_vistas.sql):** 3 Vistas analíticas para KPIs de salud pública (`VW_RESUMEN_ANUAL_NACIMIENTOS`, `VW_ALERTA_CESAREAS_REGION`, `VW_PERFIL_RIESGO_NEONATAL`).
+9. **[04_08_procedimiento_almacenado.sql](file:///c:/Users/Lara/.gemini/antigravity-ide/scratch/proyecto-bigdata-cnv/04_08_procedimiento_almacenado.sql):** Colección completa de 20 Procedimientos Almacenados estandarizados (`0.1.1` a `0.1.20`) con estructura `sp_Nombre`, parámetros, `AS BEGIN ... END;` y su invocación `EXEC`.
 
 ---
 
-## 10. MODELO PREDICTIVO DE MACHINE LEARNING
+## 9. PROCESO ETL
 
-* Código desarrollado en **[07_modelo_predictivo.py](file:///c:/Users/Lara/.gemini/antigravity-ide/scratch/proyecto-bigdata-cnv/07_modelo_predictivo.py)** e interpretación en **[07_modelo_predictivo_interpretacion.md](file:///c:/Users/Lara/.gemini/antigravity-ide/scratch/proyecto-bigdata-cnv/07_modelo_predictivo_interpretacion.md)**.
-* **Ecuación de Regresión Lineal (Nacimientos Nacionales):**
-  $$\hat{Y} = -6,998.95 \cdot X + 14,583,724.73 \quad (R^2 = 0.3338, \text{ RMSE} = \pm 31,266.25)$$
-* **Ecuación de Regresión Lineal (Tasa de Cesáreas %):**
+Implementado en Python en el archivo **[05_etl_proceso.py](file:///c:/Users/Lara/.gemini/antigravity-ide/scratch/proyecto-bigdata-cnv/05_etl_proceso.py)**:
+1. **Extracción:** Carga de fuentes `.xlsx` (`pandas.read_excel`) y `.csv` delimitados por punto y coma.
+2. **Limpieza y Duplicados:** Detección y descarte de duplicados exactos.
+3. **Tratamiento de Nulos:** Imputación de variables biométricas mediante la mediana nacional (peso: 3,250g, talla: 49cm, duración de gestación: 39 semanas) y categorización de textos vacíos como `'NO ESPECIFICADO'`.
+4. **Conversión y Formateo:** Estandarización de códigos Ubigeo a 6 caracteres (`zfill(6)`).
+5. **Cálculo de Variables Analíticas:** Generación de flags booleanos (`es_bajo_peso`, `es_prematuro`, `es_madre_adolescente`, `es_cesarea`).
+6. **Carga:** Inserción por lotes masivos hacia Microsoft SQL Server.
+
+---
+
+## 10. ANÁLISIS DE PATRONES
+
+Documentado en **[06_analisis_patrones.md](file:///c:/Users/Lara/.gemini/antigravity-ide/scratch/proyecto-bigdata-cnv/06_analisis_patrones.md)**:
+
+### 10.1. Respuestas Explícitas a las Preguntas de Investigación:
+* **¿Qué regiones presentan los valores más altos?**
+  - En volumen: **Lima (29.58% / 1,451,019 nacimientos)**, Piura (5.84% / 286,243) y La Libertad (5.52% / 270,832).
+  - En tasa de cesáreas: **Tumbes (49.30%)**, **Callao (48.90%)**, **Lima (46.80%)** y **Arequipa (45.20%)**.
+  - En bajo peso al nacer: **Huancavelica (10.20%)**, **Loreto (9.80%)** y **Ucayali (9.40%)**.
+* **¿Cómo ha variado el indicador a lo largo del tiempo?**
+  - Crecimiento de 2015 (417,368) a 2018 (pico de 493,990 partos). A partir de 2019 se produce una contracción continua, acelerada por la pandemia de 2020 (-4.85%), alcanzando **376,786 partos en 2025** (-23.73% acumulado desde el pico).
+* **¿Existen patrones repetitivos o tendencias temporales?**
+  - **Estacionalidad Mensual:** Patrón bimodal recurrente con picos en **marzo (436,279)** y **mayo (421,288)** (índice estacional > 103%), y un valle sistemático en **noviembre (384,140)**.
+  - **Tendencia Sostenida:** Descenso lineal en la natalidad (-6,998 nacimientos/año) e incremento ininterrumpido en la tasa de cesáreas (+0.4091% anual).
+
+---
+
+## 11. MODELO PREDICTIVO
+
+Desarrollado en **[07_modelo_predictivo.py](file:///c:/Users/Lara/.gemini/antigravity-ide/scratch/proyecto-bigdata-cnv/07_modelo_predictivo.py)** e interpretado en **[07_modelo_predictivo_interpretacion.md](file:///c:/Users/Lara/.gemini/antigravity-ide/scratch/proyecto-bigdata-cnv/07_modelo_predictivo_interpretacion.md)**:
+
+### 11.1. Formulación del Modelo de Regresión Lineal
+* **Variable Independiente ($X$):** Año cronológico ($2015 \dots 2025$).
+* **Variable Dependiente ($Y$):** Nacimientos anuales totales en el Perú.
+* **Ecuación del Modelo:**
+  $$\hat{Y} = -6,998.95 \cdot X + 14,583,724.73$$
+* **Bondad de Ajuste:** $R^2 = 0.3338$, $\text{MSE} = 977,578,250.96$, $\text{RMSE} = \pm 31,266.25$ nacimientos.
+* **Ecuación de Cesáreas (%):**
   $$\hat{Y}_{\text{cesarea}} = +0.4091 \cdot X - 788.03 \quad (R^2 = 0.8814)$$
-* **Proyecciones Quinquenales (2026 - 2030):**
-  - **2026:** 403,861 nacimientos | Tasa Cesáreas: 40.79%
-  - **2027:** 396,862 nacimientos | Tasa Cesáreas: 41.20%
-  - **2028:** 389,863 nacimientos | Tasa Cesáreas: 41.61%
-  - **2029:** 382,864 nacimientos | Tasa Cesáreas: 42.02%
-  - **2030:** 375,865 nacimientos | Tasa Cesáreas: 42.43%
+
+### 11.2. Proyección Quinquenal (2026 - 2030)
+
+| Año ($X$) | Nacimientos Estimados ($\hat{Y}$) | Intervalo Confianza (95%) | Tasa Cesáreas Estimada (%) | Tendencia |
+| :---: | :---: | :---: | :---: | :---: |
+| **2026** | **403,861** | [372,595 – 435,127] | **40.79%** | Decreciente |
+| **2027** | **396,862** | [365,596 – 428,128] | **41.20%** | Decreciente |
+| **2028** | **389,863** | [358,597 – 421,129] | **41.61%** | Decreciente |
+| **2029** | **382,864** | [351,598 – 414,130] | **42.02%** | Decreciente |
+| **2030** | **375,865** | [344,599 – 407,131] | **42.43%** | Decreciente |
 
 ---
 
-## 11. GRÁFICOS Y VISUALIZACIONES DEL DASHBOARD WEB
+## 12. GRÁFICOS Y VISUALIZACIONES
 
-El entregable visual central reside en el directorio `/dashboard` y en la raíz del proyecto:
-* **Archivos:** `index.html`, `styles.css`, `script.js` y `datos.json`.
-* **Tecnología:** HTML5 semántico, Vanilla CSS3 y JavaScript puro sin frameworks. Visualización mediante Chart.js.
-* **Características Funcionales:**
-  - Carga asíncrona reactiva mediante `fetch('datos.json')`.
-  - Filtros dinámicos en tiempo real por Departamento, Región Natural y Año.
-  - Gráfico de líneas combinadas: Serie histórica (línea sólida) + Proyección ML (línea punteada).
-  - Gráficos de distribución por vía de parto (dona), comparativa departamental (barras) y estacionalidad mensual.
-  - Matriz interactiva de datos ordenable y con búsqueda por texto.
-  - Diseño profesional y sobrio adaptado a salud pública, sin emojis, con iconos SVG integrados y 100% responsivo.
-
----
-
-## 12. INTERPRETACIÓN DE RESULTADOS
-
-1. **Transición Demográfica en el Perú:** La reducción de más de 117,000 nacimientos anuales entre 2018 y 2025 demuestra una disminución sostenida de la tasa global de fecundidad en el país, lo que exige adecuar la infraestructura de educación inicial y proyectar la cobertura del sistema de seguridad social.
-2. **Alerta Epidemiológica por Sobreutilización de Cesáreas:** Con una tasa nacional de **38.47%** (alcanzando más del 49% en Tumbes, Callao y Lima, y más del 65% en seguros privados), el Perú sobrepasa con creces el límite recomendado por la Organización Mundial de la Salud (15%), evidenciando un problema de gestión clínica y sobrecostos médicos evitables.
-3. **Vulnerabilidad Social y Salud Neonatal:** Las regiones con mayor tasa de pobreza y ruralidad (Huancavelica con 10.20% y Loreto con 9.80%) presentan la mayor prevalencia de bajo peso al nacer (<2,500g), vinculada directamente con el bajo nivel de instrucción materna y la falta de controles prenatales oportunos.
+El Dashboard Web se encuentra desplegado en la carpeta `/dashboard` y publicado en GitHub Pages:
+* **Estructura:** `index.html`, `styles.css`, `script.js` y `datos.json`.
+* **Tecnología:** HTML5, CSS3 Vanilla y JavaScript puro sin frameworks. Visualización dinámica con Chart.js.
+* **Capacidades Interactivas:**
+  - Consumo reactivo vía `fetch('datos.json')` con indicador de carga y control de errores.
+  - Filtros cruzados en tiempo real por Departamento, Región Natural y Año.
+  - Gráfico de líneas con doble estilo: serie histórica (línea sólida azul) y proyección predictiva ML (línea punteada ámbar).
+  - Gráficos de distribución de vía de parto (dona), ranking departamental (barras) y estacionalidad mensual.
+  - Matriz regional interactiva ordenable por columnas y con caja de búsqueda en tiempo real.
+  - Diseño corporativo sin emojis, con iconos SVG profesionales y 100% responsivo.
 
 ---
 
-## 13. CONCLUSIONES
+## 13. INTERPRETACIÓN DE RESULTADOS
 
-1. Se justificó y demostró la inviabilidad de procesar 4.9 millones de registros en herramientas de hoja de cálculo estándar, consolidando la arquitectura relacional dimensional en Microsoft SQL Server como la solución óptima.
-2. La normalización a Tercera Forma Normal (3FN) generó un ahorro del 64.4% en espacio de almacenamiento en disco y habilitó tiempos de respuesta en consultas de menos de un segundo.
-3. Se generaron scripts T-SQL rigurosos sin comandos `GO`, incorporando 20 procedimientos almacenados estandarizados que facilitan la administración y consulta de los datos.
-4. El modelo predictivo de Machine Learning y el Dashboard Web interactivo en Vanilla JS proporcionan una herramienta de analítica e inteligencia sanitaria para la toma de decisiones informadas en el Ministerio de Salud y los Gobiernos Regionales.
+1. **Significado de la Pendiente ($m = -6,998.95$):** Confirma la aceleración de la transición demográfica en el Perú, donde nacen en promedio ~7,000 niños menos por cada año calendario transcurrido.
+2. **Impacto Socioeconómico:** La reducción de la fecundidad reconfigurará la demanda educativa (menor requerimiento de vacantes en educación inicial) y exigirá prever el financiamiento del sistema previsional por el envejecimiento demográfico proyectado hacia 2040.
+3. **Riesgo Sanitario por Cesáreas:** Con un crecimiento de $+0.4091\%$ anual ($R^2 = 0.8814$), más del 42.4% de los partos en 2030 serán quirúrgicos si no se implementan auditorías clínicas rigurosas en el sector privado y de seguridad social.
 
 ---
-*Informe académico elaborado con excelencia y rigor técnico para la Escuela Superior la Pontificia | Ayacucho, 2026.*
+
+## 14. CONCLUSIONES
+
+1. Se demostró cuantitativamente la necesidad de motores relacionales Big Data ante el límite físico de 1.04M de filas de Excel frente a los 4.9M de registros del CNV.
+2. La normalización a 3FN generó un ahorro del 64.4% de espacio en disco y aceleró las consultas agregadas a tiempos sub-segundo.
+3. Se construyó una base de datos estandarizada en Microsoft SQL Server con 20 procedimientos almacenados sin comandos `GO`.
+4. El pipeline ETL en Python, el modelo predictivo de Machine Learning y el Dashboard Web interactivo en Vanilla JS proporcionan una solución integral de analítica e inteligencia sanitaria para la toma de decisiones basada en datos.
+
+---
+*Informe técnico desarrollado para la Escuela de Educación Superior Tecnológica La Pontificia | Ayacucho, Perú - 2026.*
