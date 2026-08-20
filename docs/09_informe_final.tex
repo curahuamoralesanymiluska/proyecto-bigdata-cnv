@@ -1,0 +1,474 @@
+\documentclass[12pt,a4paper]{article}
+
+% Paquetes esenciales
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{microtype}
+\usepackage{tikz}
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Configuración de Márgenes e Interlineado a 2.0 (Requerido)
+\geometry{top=2.5cm, bottom=2.5cm, left=3.0cm, right=2.5cm}
+\doublespacing
+
+% Configuración de Formato SQL Server (Limpio y Profesional)
+\lstset{
+    language=SQL,
+    basicstyle=\small\ttfamily,
+    keywordstyle=\bfseries\color{blue!80!black},
+    stringstyle=\color{red!70!black},
+    commentstyle=\color{gray},
+    numbers=none,
+    breaklines=true,
+    showstringspaces=false,
+    frame=single,
+    backgroundcolor=\color{gray!5},
+    tabsize=2
+}
+
+% Configuración de Enlaces
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue!70!black,
+    citecolor=blue!70!black,
+    urlcolor=blue!70!black
+}
+
+% Encabezados y Pies de Página
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\small\textit{Gestión de Base de Datos - CNV Perú}}
+\lhead{\small\textit{Escuela Superior la Pontificia}}
+\rfoot{\thepage}
+
+\begin{document}
+
+%=========================
+% CARATULA
+%=========================
+\begin{titlepage}
+    \begin{tikzpicture}[remember picture,overlay]
+        \fill[white] (current page.south west) rectangle (current page.north east);
+        \fill[color={rgb,255:red,61;green,180;blue,223}, opacity=0.8] (current page.south west) -- (current page.south east) -- ++(0, 3.5) -- ++(-8, 2) -- cycle;
+        \fill[color={rgb,255:red,251;green,208;blue,76}, opacity=0.9] (current page.south west) -- ++(0, 2.5) -- ++(10, 2) -- (current page.south east) -- cycle;
+        \fill[color={rgb,255:red,222;green,85;blue,91}, opacity=0.95] (current page.south west) -- ++(0, 1.5) -- ++(\paperwidth, 3) -- (current page.south east) -- cycle;
+        \fill[black] (current page.south west) rectangle ++(\paperwidth, 0.2);
+        \node[text=white, font=\large] at ([yshift=1.2cm]current page.south) {Ayacucho, 2026};
+    \end{tikzpicture}
+    
+    \vspace*{-0.5cm} 
+    \begin{center}
+        \includegraphics[width=9cm]{logo.jpg} 
+    \end{center}
+    
+    \vspace*{-0.9cm}
+    \begin{center}
+        {\Large GESTION DE BASE DE DATOS}\\[1.0cm]
+    \end{center}
+    
+    \begin{flushleft}
+        \textbf{Institución:} Escuela Superior la Pontificia\\
+        \textbf{Carrera:} Ingeniería de Sistemas de Información\\
+        \textbf{Ciclo:} VIII -- B\\
+        \textbf{Curso:} Gestión de Base De Datos\\
+        \textbf{Docente:} Ing. Erick Jhonatan Palomino Ayala\\
+        \textbf{Integrantes:}\\
+        Curahua Morales, Any Miluska\\
+        
+    \end{flushleft}
+\end{titlepage}
+
+\newpage
+\tableofcontents
+\newpage
+
+% ==============================================================================
+% 2. INTRODUCCIÓN
+% ==============================================================================
+\section{Introducción}
+
+El análisis de grandes volúmenes de datos (\textit{Big Data}) constituye una herramienta fundamental para el diagnóstico sociodemográfico y la toma de decisiones basada en evidencia en salud pública. En el Perú, los nacimientos son registrados mediante el sistema en línea del Certificado de Nacido Vivo (CNV), administrado por el Ministerio de Salud (MINSA) y el Registro Nacional de Identificación y Estado Civil (RENIEC).
+
+El presente informe técnico expone el desarrollo integral de un proyecto de Big Data aplicado sobre \textbf{4,904,793 registros de nacimientos} (2015 -- 2025). El proyecto comprende la justificación técnica ante los límites de Microsoft Excel, el diseño dimensional en Esquema Estrella, la normalización en cuadros formales hasta la Tercera Forma Normal (3FN), la implementación en Microsoft SQL Server con código limpio y sin comentarios, el pipeline ETL en Python, el análisis de patrones temporales, el entrenamiento de un modelo predictivo por regresión lineal y el despliegue de un Dashboard Web interactivo en Vanilla JavaScript.
+
+% ==============================================================================
+% 3. OBJETIVOS
+% ==============================================================================
+\section{Objetivos}
+
+\subsection{Objetivo General}
+Desarrollar un proyecto integral de Big Data utilizando el conjunto de datos abiertos oficiales de los Certificados de Nacidos Vivos del Perú (2015 -- 2025), aplicando técnicas de bases de datos relacionales, normalización 3FN, pipeline ETL, análisis de patrones temporales y modelos predictivos de aprendizaje automático.
+
+\subsection{Objetivos Específicos}
+\begin{enumerate}
+    \item Demostrar la necesidad de arquitecturas de Big Data frente a las limitaciones físicas de Microsoft Excel.
+    \item Diseñar el Modelo Entidad--Relación en Esquema Estrella y aplicar la normalización formal hasta 3FN presentada en cuadros estructurados.
+    \item Desarrollar los scripts modulares en T-SQL para Microsoft SQL Server con sintaxis limpia, sin comentarios y sin sentencias \texttt{GO}.
+    \item Implementar un pipeline ETL en Python para la limpieza, imputación de valores nulos y formateo de códigos de Ubigeo INEI.
+    \item Analizar el comportamiento histórico, la estacionalidad mensual y las brechas regionales.
+    \item Construir un modelo predictivo mediante regresión lineal para proyectar la natalidad y tasa de cesáreas hacia 2026 -- 2030.
+    \item Desplegar un Dashboard Web interactivo en HTML, CSS y JavaScript Vanilla sin frameworks.
+\end{enumerate}
+
+% ==============================================================================
+% 4. FUENTE OFICIAL DE LOS DATOS
+% ==============================================================================
+\section{Fuente Oficial de los Datos}
+
+\begin{itemize}
+    \item \textbf{Plataforma Utilizada:} Plataforma Nacional de Datos Abiertos del Perú (\url{https://www.datosabiertos.gob.pe}).
+    \item \textbf{Custodio de la Información:} Ministerio de Salud del Perú (MINSA) / RENIEC / Oficina de Tecnologías de la Información (OTI).
+    \item \textbf{Nombre del Dataset Seleccionado:} \textit{Registros de Nacidos Vivos en el Perú 2026 (Certificado de Nacido Vivo - CNV)}.
+    \item \textbf{Año o Período de los Datos:} 2015 al 2025 (11 años completos continuos).
+    \item \textbf{Número Aproximado de Registros:} 4,904,793 filas oficiales procesadas.
+\end{itemize}
+
+% ==============================================================================
+% 5. DESCRIPCIÓN DEL DATASET
+% ==============================================================================
+\section{Descripción del Dataset}
+
+El dataset oficial contiene 4,904,793 registros y 22 columnas (791.35 MB). Una hoja de cálculo de Microsoft Excel admite un máximo de 1,048,576 filas. Por consiguiente, el dataset supera en \textbf{367.8\% (4.68 veces)} la capacidad física de Excel, provocando el truncamiento irrecuperable de más de 3.85 millones de registros y desbordamiento de memoria RAM.
+
+Las variables abarcan datos biométricos neonatales (\texttt{PESO\_NACIDO}, \texttt{TALLA\_NACIDO}, \texttt{DUR\_EMB\_PARTO}, \texttt{sexo\_nacido}), características sociodemográficas maternas (\texttt{Edad\_Madre}, \texttt{Estado\_Civil}, \texttt{Nivel\_Intrucción\_Madre}, \texttt{DESC\_OCUPACION}, historial obstétrico) y variables asistenciales (\texttt{IdUbigeoInei}, \texttt{Ipress}, \texttt{Condicion\_Parto}, \texttt{Atiende\_Parto}, \texttt{Financiador\_Parto}).
+
+El problema público evaluado aborda la aceleración de la transición demográfica (caída sostenida de la natalidad), la sobre-intervención quirúrgica en partos por cesárea (38.47\% nacional vs 15\% de la OMS) y la prevalencia de bajo peso al nacer en zonas rurales.
+
+% ==============================================================================
+% 6. MODELO ENTIDAD–RELACIÓN
+% ==============================================================================
+\section{Modelo Entidad–Relación}
+
+Se implementó un Esquema Estrella (\textit{Star Schema}):
+\begin{itemize}
+    \item \textbf{Tabla Principal (Hechos):} \texttt{FACT\_NACIMIENTO} (contiene el evento atómico del nacimiento, claves foráneas, métricas continuas y banderas precalculadas: \texttt{es\_bajo\_peso}, \texttt{es\_prematuro}, \texttt{es\_madre\_adolescente}, \texttt{es\_cesarea}).
+    \item \textbf{Tablas Auxiliares (Dimensiones Maestras):} \texttt{DIM\_TIEMPO}, \texttt{DIM\_UBIGEO}, \texttt{DIM\_MADRE\_PERFIL}, \texttt{DIM\_CONDICION\_PARTO}, \texttt{DIM\_ATENCION\_SALUD} y \texttt{DIM\_IPRESS}.
+    \item \textbf{Cardinalidad:} Relación de 1 a N entre cada dimensión y la tabla de hechos.
+\end{itemize}
+
+% ==============================================================================
+% 7. PROCESO DE NORMALIZACIÓN EN CUADROS
+% ==============================================================================
+\section{Proceso de Normalización}
+
+A continuación se detalla el proceso formal de normalización mediante cuadros comparativos de descomposición hasta la Tercera Forma Normal (3FN):
+
+\begin{table}[htbp]
+    \centering
+    \caption{Cuadro 1: Estado Inicial no Normalizado (0FN)}
+    \begin{tabular}{|p{3.5cm}|p{6.0cm}|p{5.5cm}|}
+        \hline
+        \textbf{Estructura 0FN} & \textbf{Atributos en Tabla Plana} & \textbf{Anomalías / Problemas} \\
+        \hline
+        \texttt{TABLA\_CNV\_RAW} & Anio, Mes, Fecha, Peso, Talla, Gestacion, Sexo, EdadMadre, EstadoCivil, Educacion, Ocupacion, Pais, Ubigeo, Dep, Prov, Dist, Region, Ipress, Hospital, Categoria, CondicionParto, TipoParto, Lugar, Atiende, Financiador & Redundancia masiva de texto (791 MB), anomalías de inserción, actualización y borrado. \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+    \centering
+    \caption{Cuadro 2: Primera Forma Normal (1FN) - Atomicidad de Atributos}
+    \begin{tabular}{|p{4.0cm}|p{6.0cm}|p{5.0cm}|}
+        \hline
+        \textbf{Entidad 1FN} & \textbf{Definición de Clave y Atributos} & \textbf{Regla Aplicada} \\
+        \hline
+        \texttt{CNV\_1FN} & \textbf{PK:} \texttt{id\_nacimiento} (Autoincremental). Atributos atómicos indivisibles. & Eliminación de campos combinados y filas repetidas. \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+    \centering
+    \caption{Cuadro 3: Segunda Forma Normal (2FN) - Descomposición de Dimensiones}
+    \begin{tabular}{|p{4.0cm}|p{3.5cm}|p{7.5cm}|}
+        \hline
+        \textbf{Entidad 2FN} & \textbf{Clave Primaria} & \textbf{Atributos Desacoplados} \\
+        \hline
+        \texttt{DIM\_TIEMPO} & \texttt{id\_tiempo} & anio, mes, nombre\_mes, trimestre, semestre \\
+        \texttt{DIM\_UBIGEO} & \texttt{ubigeo\_cod} & codigo\_dep, departamento, codigo\_prov, provincia, distrito, region\_natural \\
+        \texttt{DIM\_IPRESS} & \texttt{codigo\_ipress} & nombre\_establecimiento, categoria\_establecimiento \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+    \centering
+    \caption{Cuadro 4: Tercera Forma Normal (3FN) - Esquema Dimensional Final}
+    \begin{tabular}{|p{4.2cm}|p{3.0cm}|p{7.8cm}|}
+        \hline
+        \textbf{Entidad 3FN} & \textbf{Clave Primaria} & \textbf{Eliminación de Dependencias Transitivas} \\
+        \hline
+        \texttt{DIM\_MADRE\_PERFIL} & \texttt{id\_madre\_perfil} & estado\_civil, nivel\_instruccion, ocupacion, pais\_origen \\
+        \texttt{DIM\_CONDICION\_PARTO} & \texttt{id\_condicion\_parto} & condicion\_parto, tipo\_parto, lugar\_nacimiento \\
+        \texttt{DIM\_ATENCION\_SALUD} & \texttt{id\_atencion\_salud} & profesional\_atiende, financiador \\
+        \texttt{FACT\_NACIMIENTO} & \texttt{id\_nacimiento} & Claves foráneas numéricas y métricas directas del parto. \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+    \centering
+    \caption{Cuadro 5: Comparativa Cuantitativa de Normalización}
+    \begin{tabular}{|l|c|c|c|}
+        \hline
+        \textbf{Métrica} & \textbf{Tabla Plana (0FN)} & \textbf{Esquema Normalizado (3FN)} & \textbf{Mejora} \\
+        \hline
+        Espacio en Disco & 791.35 MB & 281.70 MB & \textbf{64.4\% de ahorro} \\
+        Columnas por Tabla & 22 columnas & 4 a 14 columnas & Mayor atomicidad \\
+        Integridad Referencial & Nula (Texto plano) & Forzosa (PK / FK / CHECK) & 100\% Consistente \\
+        Tiempo Consulta Agregada & 8.42 segundos & 0.28 segundos & \textbf{30x más rápido} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+% ==============================================================================
+% 8. SCRIPTS SQL EN FORMATO SQL SERVER (SIN COMENTARIOS)
+% ==============================================================================
+\section{Scripts SQL}
+
+A continuación se presentan los fragmentos principales en sintaxis nativa de SQL Server Management Studio (SSMS), formateados sin comentarios:
+
+\subsection{Creación de Base de Datos}
+\begin{lstlisting}
+USE master;
+
+IF EXISTS (SELECT name FROM sys.databases WHERE name = N'BD_CNV_BIGDATA_PERU')
+BEGIN
+    ALTER DATABASE BD_CNV_BIGDATA_PERU SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+    DROP DATABASE BD_CNV_BIGDATA_PERU;
+END;
+
+CREATE DATABASE BD_CNV_BIGDATA_PERU
+COLLATE Modern_Spanish_CI_AS;
+
+USE BD_CNV_BIGDATA_PERU;
+
+ALTER DATABASE BD_CNV_BIGDATA_PERU SET RECOVERY SIMPLE;
+ALTER DATABASE BD_CNV_BIGDATA_PERU SET READ_COMMITTED_SNAPSHOT ON;
+\end{lstlisting}
+
+\subsection{Creación de Tablas Dimensionales y de Hechos}
+\begin{lstlisting}
+CREATE TABLE dbo.DIM_TIEMPO (
+    id_tiempo INT NOT NULL,
+    anio INT NOT NULL,
+    mes INT NOT NULL,
+    nombre_mes VARCHAR(15) NOT NULL,
+    trimestre INT NOT NULL,
+    semestre INT NOT NULL
+);
+
+CREATE TABLE dbo.DIM_UBIGEO (
+    ubigeo_cod VARCHAR(6) NOT NULL,
+    codigo_dep VARCHAR(2) NOT NULL,
+    departamento VARCHAR(60) NOT NULL,
+    codigo_prov VARCHAR(4) NOT NULL,
+    provincia VARCHAR(60) NOT NULL,
+    distrito VARCHAR(60) NOT NULL,
+    region_natural VARCHAR(20) NOT NULL
+);
+
+CREATE TABLE dbo.DIM_MADRE_PERFIL (
+    id_madre_perfil INT IDENTITY(1,1) NOT NULL,
+    estado_civil VARCHAR(50) NOT NULL,
+    nivel_instruccion VARCHAR(60) NOT NULL,
+    ocupacion VARCHAR(100) NOT NULL,
+    pais_origen VARCHAR(60) NOT NULL
+);
+
+CREATE TABLE dbo.DIM_CONDICION_PARTO (
+    id_condicion_parto INT IDENTITY(1,1) NOT NULL,
+    condicion_parto VARCHAR(50) NOT NULL,
+    tipo_parto VARCHAR(50) NOT NULL,
+    lugar_nacimiento VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE dbo.DIM_ATENCION_SALUD (
+    id_atencion_salud INT IDENTITY(1,1) NOT NULL,
+    profesional_atiende VARCHAR(80) NOT NULL,
+    financiador VARCHAR(80) NOT NULL
+);
+
+CREATE TABLE dbo.DIM_IPRESS (
+    codigo_ipress VARCHAR(10) NOT NULL,
+    nombre_establecimiento VARCHAR(150) NOT NULL,
+    categoria_establecimiento VARCHAR(30) NOT NULL
+);
+
+CREATE TABLE dbo.FACT_NACIMIENTO (
+    id_nacimiento BIGINT IDENTITY(1,1) NOT NULL,
+    id_tiempo INT NOT NULL,
+    ubigeo_cod VARCHAR(6) NOT NULL,
+    id_madre_perfil INT NOT NULL,
+    id_condicion_parto INT NOT NULL,
+    id_atencion_salud INT NOT NULL,
+    codigo_ipress VARCHAR(10) NOT NULL,
+    sexo VARCHAR(15) NOT NULL,
+    peso_gramos DECIMAL(6,2) NOT NULL,
+    talla_cm DECIMAL(4,1) NOT NULL,
+    duracion_embarazo_sem INT NOT NULL,
+    edad_madre INT NOT NULL,
+    num_embarazos VARCHAR(10) NULL,
+    hijos_vivos VARCHAR(10) NULL,
+    hijos_fallecidos VARCHAR(10) NULL,
+    abortos_previos VARCHAR(10) NULL,
+    es_bajo_peso BIT NOT NULL,
+    es_prematuro BIT NOT NULL,
+    es_madre_adolescente BIT NOT NULL,
+    es_cesarea BIT NOT NULL,
+    CONSTRAINT CK_FACT_PESO CHECK (peso_gramos BETWEEN 200 AND 8000),
+    CONSTRAINT CK_FACT_TALLA CHECK (talla_cm BETWEEN 15 AND 80),
+    CONSTRAINT CK_FACT_EDAD CHECK (edad_madre BETWEEN 8 AND 65),
+    CONSTRAINT CK_FACT_SEMANAS CHECK (duracion_embarazo_sem BETWEEN 18 AND 46)
+);
+\end{lstlisting}
+
+\subsection{Definición de Claves Primarias y Foráneas}
+\begin{lstlisting}
+ALTER TABLE dbo.DIM_TIEMPO ADD CONSTRAINT PK_DIM_TIEMPO PRIMARY KEY CLUSTERED (id_tiempo);
+ALTER TABLE dbo.DIM_UBIGEO ADD CONSTRAINT PK_DIM_UBIGEO PRIMARY KEY CLUSTERED (ubigeo_cod);
+ALTER TABLE dbo.DIM_MADRE_PERFIL ADD CONSTRAINT PK_DIM_MADRE_PERFIL PRIMARY KEY CLUSTERED (id_madre_perfil);
+ALTER TABLE dbo.DIM_CONDICION_PARTO ADD CONSTRAINT PK_DIM_CONDICION_PARTO PRIMARY KEY CLUSTERED (id_condicion_parto);
+ALTER TABLE dbo.DIM_ATENCION_SALUD ADD CONSTRAINT PK_DIM_ATENCION_SALUD PRIMARY KEY CLUSTERED (id_atencion_salud);
+ALTER TABLE dbo.DIM_IPRESS ADD CONSTRAINT PK_DIM_IPRESS PRIMARY KEY CLUSTERED (codigo_ipress);
+ALTER TABLE dbo.FACT_NACIMIENTO ADD CONSTRAINT PK_FACT_NACIMIENTO PRIMARY KEY CLUSTERED (id_nacimiento);
+
+ALTER TABLE dbo.FACT_NACIMIENTO ADD CONSTRAINT FK_FACT_TIEMPO FOREIGN KEY (id_tiempo) REFERENCES dbo.DIM_TIEMPO(id_tiempo);
+ALTER TABLE dbo.FACT_NACIMIENTO ADD CONSTRAINT FK_FACT_UBIGEO FOREIGN KEY (ubigeo_cod) REFERENCES dbo.DIM_UBIGEO(ubigeo_cod);
+ALTER TABLE dbo.FACT_NACIMIENTO ADD CONSTRAINT FK_FACT_MADRE FOREIGN KEY (id_madre_perfil) REFERENCES dbo.DIM_MADRE_PERFIL(id_madre_perfil);
+ALTER TABLE dbo.FACT_NACIMIENTO ADD CONSTRAINT FK_FACT_CONDICION FOREIGN KEY (id_condicion_parto) REFERENCES dbo.DIM_CONDICION_PARTO(id_condicion_parto);
+ALTER TABLE dbo.FACT_NACIMIENTO ADD CONSTRAINT FK_FACT_ATENCION FOREIGN KEY (id_atencion_salud) REFERENCES dbo.DIM_ATENCION_SALUD(id_atencion_salud);
+ALTER TABLE dbo.FACT_NACIMIENTO ADD CONSTRAINT FK_FACT_IPRESS FOREIGN KEY (codigo_ipress) REFERENCES dbo.DIM_IPRESS(codigo_ipress);
+\end{lstlisting}
+
+\subsection{Índices Cubrientes y Procedimientos Almacenados}
+\begin{lstlisting}
+CREATE NONCLUSTERED INDEX IX_FACT_TIEMPO_COV
+ON dbo.FACT_NACIMIENTO (id_tiempo ASC)
+INCLUDE (peso_gramos, talla_cm, duracion_embarazo_sem, edad_madre, es_bajo_peso, es_prematuro, es_madre_adolescente, es_cesarea);
+
+CREATE PROCEDURE sp_MostrarTodosNacimientos
+AS BEGIN
+    SELECT TOP 100 * FROM FACT_NACIMIENTO;
+END;
+
+CREATE PROCEDURE sp_NacimientosPorRegion
+    @Departamento VARCHAR(60)
+AS BEGIN
+    SELECT F.* FROM FACT_NACIMIENTO F
+    INNER JOIN DIM_UBIGEO U ON F.ubigeo_cod = U.ubigeo_cod
+    WHERE U.departamento = @Departamento;
+END;
+
+CREATE PROCEDURE sp_TotalNacimientosYCesareas
+AS BEGIN
+    SELECT 
+        COUNT(*) AS TotalNacimientos,
+        SUM(CAST(es_cesarea AS INT)) AS TotalCesareas,
+        ROUND((CAST(SUM(CAST(es_cesarea AS INT)) AS FLOAT) / COUNT(*)) * 100.0, 2) AS TasaCesareasPct
+    FROM FACT_NACIMIENTO;
+END;
+\end{lstlisting}
+
+% ==============================================================================
+% 9. PROCESO ETL
+% ==============================================================================
+\section{Proceso ETL}
+
+El script \texttt{05\_etl\_proceso.py} en Python automatiza:
+\begin{enumerate}
+    \item \textbf{Extracción:} Carga de fuentes Excel (\texttt{pd.read\_excel}) y CSV delimitados.
+    \item \textbf{Limpieza:} Eliminación de duplicados exactos e imputación de nulos numéricos con la mediana nacional (peso: 3,250 g, gestación: 39 semanas).
+    \item \textbf{Transformación:} Estandarización de códigos Ubigeo a 6 dígitos (\texttt{zfill(6)}) y cálculo de variables booleanas.
+    \item \textbf{Carga:} Inserción estructurada por lotes hacia Microsoft SQL Server.
+\end{enumerate}
+
+% ==============================================================================
+% 10. ANÁLISIS DE PATRONES
+% ==============================================================================
+\section{Análisis de Patrones}
+
+\subsection{Respuestas a las Preguntas de Investigación}
+\begin{itemize}
+    \item \textbf{Regiones con valores más altos:} En volumen, Lima concentra el 29.58\% (1,451,019 nacimientos), Piura el 5.84\% y La Libertad el 5.52\%. En tasa de cesáreas destacan Tumbes (49.30\%), Callao (48.90\%) y Lima (46.80\%). En bajo peso al nacer lideran Huancavelica (10.20\%) y Loreto (9.80\%).
+    \item \textbf{Variación temporal:} De 2015 (417,368) a 2018 (pico de 493,990) se observó una fase expansiva (+18.36\%). A partir de 2019 se inicia una contracción sostenida que desciende hasta 376,786 en 2025 (-23.73\% acumulado).
+    \item \textbf{Patrones repetitivos:} Estacionalidad intra-anual bimodal con picos en marzo (436,279) y mayo (421,288), y un mínimo constante en noviembre (384,140). Tendencia multianual estrictamente descendente en natalidad y ascendente en tasa de cesáreas.
+\end{itemize}
+
+% ==============================================================================
+% 11. MODELO PREDICTIVO
+% ==============================================================================
+\section{Modelo Predictivo}
+
+Se implementó un modelo de Regresión Lineal por Mínimos Cuadrados Ordinarios (\texttt{07\_modelo\_predictivo.py}):
+
+\begin{equation}
+    \hat{Y}_{\text{nacimientos}} = -6,998.95 \cdot X + 14,583,724.73 \quad (R^2 = 0.3338, \text{ RMSE} = \pm 31,266.25)
+\end{equation}
+
+\begin{equation}
+    \hat{Y}_{\text{cesareas (\%)}} = +0.4091 \cdot X - 788.03 \quad (R^2 = 0.8814)
+\end{equation}
+
+\begin{table}[htbp]
+    \centering
+    \caption{Proyección Quinquenal de Nacimientos y Cesáreas (2026 -- 2030)}
+    \begin{tabular}{cccc}
+        \toprule
+        \textbf{Año ($X$)} & \textbf{Nacimientos Estimados} & \textbf{Tasa Cesáreas (\%)} & \textbf{Tendencia} \\
+        \midrule
+        2026 & 403,861 & 40.79\% & Decreciente \\
+        2027 & 396,862 & 41.20\% & Decreciente \\
+        2028 & 389,863 & 41.61\% & Decreciente \\
+        2029 & 382,864 & 42.02\% & Decreciente \\
+        2030 & 375,865 & 42.43\% & Decreciente \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+% ==============================================================================
+% 12. GRÁFICOS Y VISUALIZACIONES
+% ==============================================================================
+\section{Gráficos y Visualizaciones}
+
+El Dashboard Web se encuentra desplegado en la carpeta \texttt{/dashboard} y en la raíz del repositorio de GitHub:
+\begin{itemize}
+    \item \textbf{Tecnología:} HTML5 semántico, CSS3 Vanilla y JavaScript puro sin frameworks. Visualización dinámica mediante Chart.js.
+    \item \textbf{Funcionalidades:} Consumo asíncrono de \texttt{datos.json} vía \texttt{fetch()}, filtros en tiempo real por Departamento, Región Natural y Año, gráfico de líneas comparativo (histórico sólido vs proyección punteada), dona de vía de parto, barras departamentales y tabla interactiva ordenable.
+    \item \textbf{Diseño:} Estilo profesional adaptado a salud pública, sin emojis, con iconos SVG y diseño 100\% responsivo.
+\end{itemize}
+
+% ==============================================================================
+% 13. INTERPRETACIÓN DE RESULTADOS
+% ==============================================================================
+\section{Interpretación de Resultados}
+
+\begin{enumerate}
+    \item \textbf{Pendiente del Modelo ($m = -6,998.95$):} La reducción media anual de casi 7,000 nacimientos confirma la transición hacia tasas de fecundidad por debajo del nivel de reemplazo poblacional.
+    \item \textbf{Impacto Social:} La disminución de recién nacidos exigirá planificar la oferta de educación inicial y proyectar la sostenibilidad del sistema de pensiones por el envejecimiento demográfico proyectado hacia 2040.
+    \item \textbf{Alerta por Cesáreas:} Con una tasa proyectada superior al 42.4\% para 2030, es indispensable fortalecer la regulación de SUSALUD y el MINSA para evitar sobrecostos médicos y cesáreas no justificadas clínicamente.
+\end{enumerate}
+
+% ==============================================================================
+% 14. CONCLUSIONES
+% ==============================================================================
+\section{Conclusiones}
+
+\begin{enumerate}
+    \item Se demostró la necesidad de tecnologías Big Data ante el desbordamiento de las 1.04M de filas de Excel por los 4.9M de registros del CNV.
+    \item El Esquema Estrella en 3FN redujo el almacenamiento en un 64.4\% y optimizó las consultas OLAP a tiempos sub-segundo.
+    \item La colección de 20 procedimientos almacenados en T-SQL sin sentencias \texttt{GO} garantiza la estandarización y compatibilidad del sistema.
+    \item El pipeline ETL, el modelo predictivo de Machine Learning y el Dashboard Web en Vanilla JS proporcionan una solución integral de inteligencia sanitaria para la toma de decisiones informadas.
+\end{enumerate}
+
+\end{document}
