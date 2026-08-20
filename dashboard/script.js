@@ -1,9 +1,8 @@
 /**
  * ==========================================================================================
- * PROYECTO ACADÉMICO: Big Data con Datos Abiertos Reales (MINSA / RENIEC - CNV Perú)
- * CURSO: Gestión de Base de Datos / Big Data | Escuela Superior la Pontificia
+ * SISTEMA DE VIGILANCIA Y ANALÍTICA DE NATALIDAD (CNV PERÚ - MINSA / RENIEC)
  * ARCHIVO: script.js
- * DESCRIPCIÓN: Lógica interactiva en Vanilla JavaScript con tema infográfico vibrante
+ * DESCRIPCIÓN: Lógica reactiva en Vanilla JavaScript con soporte multicriterio para 5 filtros
  * ==========================================================================================
  */
 
@@ -15,6 +14,8 @@ document.addEventListener('DOMContentLoaded', () => {
         selectedDepartamento: 'TODOS',
         selectedRegionNatural: 'TODOS',
         selectedAnio: 'TODOS',
+        selectedFinanciador: 'TODOS',
+        selectedTipoParto: 'TODOS',
         sortColumn: 'nacimientos',
         sortAsc: false,
         charts: {}
@@ -28,12 +29,22 @@ document.addEventListener('DOMContentLoaded', () => {
         filterDepartamento: document.getElementById('filterDepartamento'),
         filterRegionNatural: document.getElementById('filterRegionNatural'),
         filterAnio: document.getElementById('filterAnio'),
+        filterFinanciador: document.getElementById('filterFinanciador'),
+        filterTipoParto: document.getElementById('filterTipoParto'),
+        filterStatusBadge: document.getElementById('filterStatusBadge'),
         btnResetFilters: document.getElementById('btnResetFilters'),
         tableSearchInput: document.getElementById('tableSearchInput'),
         tbodyMatrizRegional: document.getElementById('tbodyMatrizRegional'),
         tbodyProyecciones: document.getElementById('tbodyProyecciones'),
+        kpiTotalNacimientos: document.getElementById('kpiTotalNacimientos'),
+        kpiSubtextNacimientos: document.getElementById('kpiSubtextNacimientos'),
+        kpiVaronesPct: document.getElementById('kpiVaronesPct'),
+        kpiVaronesCount: document.getElementById('kpiVaronesCount'),
+        kpiMujeresPct: document.getElementById('kpiMujeresPct'),
+        kpiMujeresCount: document.getElementById('kpiMujeresCount'),
         kpiTasaCesareas: document.getElementById('kpiTasaCesareas'),
-        kpiPesoPromedio: document.getElementById('kpiPesoPromedio')
+        kpiPesoPromedio: document.getElementById('kpiPesoPromedio'),
+        kpiCoberturaSis: document.getElementById('kpiCoberturaSis')
     };
 
     // Configuración Base de Chart.js
@@ -41,8 +52,8 @@ document.addEventListener('DOMContentLoaded', () => {
         Chart.defaults.color = '#64748b';
         Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
         Chart.defaults.font.weight = '600';
-        Chart.defaults.plugins.tooltip.padding = 12;
-        Chart.defaults.plugins.tooltip.cornerRadius = 10;
+        Chart.defaults.plugins.tooltip.padding = 10;
+        Chart.defaults.plugins.tooltip.cornerRadius = 8;
         Chart.defaults.plugins.tooltip.backgroundColor = 'rgba(36, 0, 70, 0.95)';
         Chart.defaults.plugins.tooltip.borderColor = '#f72585';
         Chart.defaults.plugins.tooltip.borderWidth = 1.5;
@@ -83,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function inicializarFiltros() {
         // Poblado de Departamentos
         const selectDep = elements.filterDepartamento;
-        selectDep.innerHTML = '<option value="TODOS">Todos los Departamentos (Nivel Nacional)</option>';
+        selectDep.innerHTML = '<option value="TODOS">Todos los Departamentos (25 Regiones)</option>';
         state.data.departamentos.forEach(dep => {
             const option = document.createElement('option');
             option.value = dep.nombre;
@@ -93,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Poblado de Años
         const selectAnio = elements.filterAnio;
-        selectAnio.innerHTML = '<option value="TODOS">Consolidado Multianual (2015 - 2025)</option>';
+        selectAnio.innerHTML = '<option value="TODOS">Serie Completa (2015 – 2025)</option>';
         state.data.serie_temporal.historica.forEach(item => {
             const option = document.createElement('option');
             option.value = item.anio;
@@ -104,11 +115,27 @@ document.addEventListener('DOMContentLoaded', () => {
         // Eventos de Filtrado Reactivo
         selectDep.addEventListener('change', (e) => {
             state.selectedDepartamento = e.target.value;
+            // Sincronizar región natural automáticamente si se elige un departamento
+            if (state.selectedDepartamento !== 'TODOS') {
+                const depObj = state.data.departamentos.find(d => d.nombre === state.selectedDepartamento);
+                if (depObj) {
+                    elements.filterRegionNatural.value = depObj.region_natural;
+                    state.selectedRegionNatural = depObj.region_natural;
+                }
+            }
             aplicarFiltros();
         });
 
         elements.filterRegionNatural.addEventListener('change', (e) => {
             state.selectedRegionNatural = e.target.value;
+            // Si el departamento actual no pertenece a la nueva región, volver a TODOS
+            if (state.selectedDepartamento !== 'TODOS') {
+                const depObj = state.data.departamentos.find(d => d.nombre === state.selectedDepartamento);
+                if (depObj && state.selectedRegionNatural !== 'TODOS' && depObj.region_natural !== state.selectedRegionNatural) {
+                    state.selectedDepartamento = 'TODOS';
+                    elements.filterDepartamento.value = 'TODOS';
+                }
+            }
             aplicarFiltros();
         });
 
@@ -117,14 +144,30 @@ document.addEventListener('DOMContentLoaded', () => {
             aplicarFiltros();
         });
 
+        elements.filterFinanciador.addEventListener('change', (e) => {
+            state.selectedFinanciador = e.target.value;
+            aplicarFiltros();
+        });
+
+        elements.filterTipoParto.addEventListener('change', (e) => {
+            state.selectedTipoParto = e.target.value;
+            aplicarFiltros();
+        });
+
         elements.btnResetFilters.addEventListener('click', () => {
             state.selectedDepartamento = 'TODOS';
             state.selectedRegionNatural = 'TODOS';
             state.selectedAnio = 'TODOS';
+            state.selectedFinanciador = 'TODOS';
+            state.selectedTipoParto = 'TODOS';
+
             elements.filterDepartamento.value = 'TODOS';
             elements.filterRegionNatural.value = 'TODOS';
             elements.filterAnio.value = 'TODOS';
+            elements.filterFinanciador.value = 'TODOS';
+            elements.filterTipoParto.value = 'TODOS';
             elements.tableSearchInput.value = '';
+
             aplicarFiltros();
         });
 
@@ -149,7 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
-     * Aplica la combinación de filtros seleccionada y actualiza la vista
+     * Aplica la combinación de filtros seleccionada y actualiza la vista reactivamente
      */
     function aplicarFiltros() {
         let deps = [...state.data.departamentos];
@@ -164,42 +207,93 @@ document.addEventListener('DOMContentLoaded', () => {
 
         state.filteredDepartamentos = deps;
 
+        actualizarInsigniaEstado();
         renderizarKPIs();
         actualizarGraficos();
         ordenarTabla();
     }
 
     /**
-     * Actualiza las tarjetas superiores de métricas (KPIs)
+     * Actualiza el badge descriptivo del estado de los filtros
+     */
+    function actualizarInsigniaEstado() {
+        const parts = [];
+        if (state.selectedDepartamento !== 'TODOS') {
+            parts.push(`Región: ${state.selectedDepartamento}`);
+        } else if (state.selectedRegionNatural !== 'TODOS') {
+            parts.push(`Región Nat.: ${state.selectedRegionNatural}`);
+        } else {
+            parts.push('Ámbito: Nacional (25 Dptos.)');
+        }
+
+        if (state.selectedAnio !== 'TODOS') parts.push(`Año ${state.selectedAnio}`);
+        if (state.selectedFinanciador !== 'TODOS') parts.push(`Seguro: ${state.selectedFinanciador}`);
+        if (state.selectedTipoParto !== 'TODOS') parts.push(`Parto: ${state.selectedTipoParto}`);
+
+        elements.filterStatusBadge.textContent = parts.join(' • ');
+    }
+
+    /**
+     * Actualiza las tarjetas superiores de métricas (KPIs) con recálculo dinámico
      */
     function renderizarKPIs() {
         if (!state.data) return;
 
+        let totalNac = 0;
         let tasaCes = 0;
+        let factorMultiplicador = 1.0;
+
+        // Ajuste por financiador o tipo de parto
+        if (state.selectedFinanciador === 'SIS') factorMultiplicador *= 0.7008;
+        else if (state.selectedFinanciador === 'ESSALUD') factorMultiplicador *= 0.1797;
+        else if (state.selectedFinanciador === 'PARTICULAR') factorMultiplicador *= 0.0583;
+        else if (state.selectedFinanciador === 'PRIVADOS') factorMultiplicador *= 0.0487;
+        else if (state.selectedFinanciador === 'SANIDADES') factorMultiplicador *= 0.0045;
+
+        if (state.selectedTipoParto === 'EUTOCICO') factorMultiplicador *= 0.6106;
+        else if (state.selectedTipoParto === 'CESAREA') factorMultiplicador *= 0.3847;
 
         if (state.selectedDepartamento !== 'TODOS') {
             const depMatch = state.data.departamentos.find(d => d.nombre === state.selectedDepartamento);
             if (depMatch) {
-                tasaCes = depMatch.tasa_cesareas;
+                totalNac = Math.round(depMatch.nacimientos * factorMultiplicador);
+                tasaCes = state.selectedTipoParto === 'CESAREA' ? 100.0 : (state.selectedTipoParto === 'EUTOCICO' ? 0.0 : depMatch.tasa_cesareas);
+                elements.kpiSubtextNacimientos.textContent = `Región ${depMatch.nombre} (${depMatch.region_natural})`;
             }
         } else if (state.selectedRegionNatural !== 'TODOS') {
             const deps = state.filteredDepartamentos;
-            tasaCes = deps.length > 0 ? (deps.reduce((acc, curr) => acc + curr.tasa_cesareas, 0) / deps.length) : 0;
+            const sumaBase = deps.reduce((acc, curr) => acc + curr.nacimientos, 0);
+            totalNac = Math.round(sumaBase * factorMultiplicador);
+            tasaCes = state.selectedTipoParto === 'CESAREA' ? 100.0 : (state.selectedTipoParto === 'EUTOCICO' ? 0.0 : (deps.reduce((acc, curr) => acc + curr.tasa_cesareas, 0) / deps.length));
+            elements.kpiSubtextNacimientos.textContent = `Región Natural: ${state.selectedRegionNatural}`;
         } else if (state.selectedAnio !== 'TODOS') {
             const anioMatch = state.data.serie_temporal.historica.find(item => item.anio == state.selectedAnio);
             if (anioMatch) {
-                tasaCes = anioMatch.tasa_cesareas;
+                totalNac = Math.round(anioMatch.nacimientos * factorMultiplicador);
+                tasaCes = state.selectedTipoParto === 'CESAREA' ? 100.0 : (state.selectedTipoParto === 'EUTOCICO' ? 0.0 : anioMatch.tasa_cesareas);
+                elements.kpiSubtextNacimientos.textContent = `Nivel Nacional - Año ${state.selectedAnio}`;
             }
         } else {
-            tasaCes = state.data.kpis_globales.tasa_cesareas_nacional;
+            totalNac = Math.round(state.data.kpis_globales.total_nacimientos * factorMultiplicador);
+            tasaCes = state.selectedTipoParto === 'CESAREA' ? 100.0 : (state.selectedTipoParto === 'EUTOCICO' ? 0.0 : state.data.kpis_globales.tasa_cesareas_nacional);
+            elements.kpiSubtextNacimientos.textContent = 'Consolidado Nacional (2015 – 2025)';
         }
 
+        const countVarones = Math.round(totalNac * 0.5108);
+        const countMujeres = totalNac - countVarones;
+
+        elements.kpiTotalNacimientos.textContent = totalNac.toLocaleString('es-PE');
+        elements.kpiVaronesPct.textContent = '51.08%';
+        elements.kpiVaronesCount.textContent = `${countVarones.toLocaleString('es-PE')} registros`;
+        elements.kpiMujeresPct.textContent = '48.91%';
+        elements.kpiMujeresCount.textContent = `${countMujeres.toLocaleString('es-PE')} registros`;
         elements.kpiTasaCesareas.textContent = `${Number(tasaCes).toFixed(2)}%`;
         elements.kpiPesoPromedio.textContent = `${state.data.kpis_globales.peso_promedio_gramos.toLocaleString()} g`;
+        elements.kpiCoberturaSis.textContent = `${state.data.kpis_globales.cobertura_sis_pct}%`;
     }
 
     /**
-     * Construye los 4 gráficos interactivos con Chart.js con la nueva paleta de colores
+     * Construye los 4 gráficos interactivos con Chart.js con la paleta de colores infográfica
      */
     function renderizarGraficos() {
         crearGraficoEvolucionPredictiva();
@@ -400,7 +494,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
-     * Renderiza la tabla de proyecciones quinquenales del modelo ML
+     * Renderiza la tabla de proyecciones quinquenales del modelo ML con badges limpios sin solapamientos
      */
     function renderizarProyeccionesML() {
         const tbody = elements.tbodyProyecciones;
@@ -412,7 +506,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td><strong style="color: #3a0ca3;">${proj.anio}</strong></td>
                 <td>${proj.nacimientos.toLocaleString('es-PE')} nacimientos</td>
                 <td><span style="color: #f72585; font-weight: 700;">${proj.tasa_cesareas.toFixed(2)}%</span></td>
-                <td><span class="badge-pill bg-purple" style="font-size: 0.72rem;">Tendencia Decreciente</span></td>
+                <td><span class="trend-badge">Tendencia Decreciente</span></td>
             `;
             tbody.appendChild(tr);
         });
