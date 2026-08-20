@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Analítico y Predictivo - CNV Perú</title>
-    <meta name="description" content="Dashboard Analítico y Predictivo de Big Data e Infografía Sanitaria sobre el Certificado de Nacido Vivo en el Perú (MINSA / RENIEC 2015-2030)">
+    <title>Sistema de Vigilancia y Analítica de Natalidad - CNV Perú (MINSA)</title>
+    <meta name="description" content="Dashboard Ejecutivo y Predictivo de Big Data e Infografía Sanitaria sobre el Certificado de Nacido Vivo en el Perú (MINSA / RENIEC 2015-2030)">
     
     <!-- Fuentes Tipográficas Profesionales -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -22,7 +22,7 @@
     <!-- Estado de Carga (Loading Overlay) -->
     <div id="loadingOverlay" class="loading-overlay">
         <div class="spinner"></div>
-        <p class="loading-text">Cargando repositorio de datos e infografía analítica...</p>
+        <p class="loading-text">Cargando repositorio analítico de datos abiertos MINSA...</p>
     </div>
 
     <!-- Contenedor de Errores -->
@@ -36,39 +36,38 @@
     </div>
 
     <div class="app-layout">
-        <!-- Barra Superior / Header Infográfico Institucional -->
+        <!-- Barra Superior / Header Ejecutivo Profesional de Salud Pública -->
         <header class="top-header">
             <div class="header-main-brand">
                 <div class="infographic-badge">
-                    <svg class="icon-svg" viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#f72585" stroke-width="2.5">
+                    <svg class="icon-svg" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#f72585" stroke-width="2.5">
                         <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path>
                     </svg>
                 </div>
                 <div>
-                    <h1 class="header-title">INFOGRAFÍA ANALÍTICA Y PREDICTIVA <span class="highlight-text">CNV PERÚ</span></h1>
-                    <p class="header-subtitle">Certificados de Nacidos Vivos en el Perú | Ministerio de Salud (MINSA) / RENIEC (4,904,793 Registros)</p>
+                    <h1 class="header-title">SISTEMA DE VIGILANCIA Y ANALÍTICA DE NATALIDAD <span class="highlight-text">CNV PERÚ</span></h1>
+                    <p class="header-subtitle">Certificados de Nacidos Vivos en el Perú | Ministerio de Salud (MINSA) & RENIEC • 4,904,793 Registros Oficiales</p>
                 </div>
             </div>
             
             <div class="header-meta">
-                <span class="badge-pill bg-purple">Escuela Superior la Pontificia</span>
-                <span class="badge-pill bg-cyan">Ingeniería de Sistemas</span>
-                <span class="badge-pill bg-gold">Ayacucho, 2026</span>
+                <span class="badge-pill bg-purple">Datos Abiertos Oficiales</span>
+                <span class="badge-pill bg-cyan">Serie 2015 – 2025</span>
+                <span class="badge-pill bg-gold">Proyección ML 2026 – 2030</span>
             </div>
         </header>
 
-        <!-- Barra Superior de Estadísticas por Sexo y Métricas Rápidas (Estilo Infografía) -->
+        <!-- Barra Superior de Estadísticas por Sexo y Métricas Rápidas -->
         <section class="sex-stats-banner">
             <div class="sex-card boy-card">
                 <div class="sex-icon-wrap">
                     <!-- Icono Neonato Niño Azul -->
-                    <svg viewBox="0 0 64 64" width="38" height="38" fill="none">
+                    <svg viewBox="0 0 64 64" width="40" height="40" fill="none">
                         <circle cx="32" cy="18" r="12" fill="#00b4d8"/>
                         <path d="M20 32c-3 0-6 4-6 9 0 7 6 15 18 15s18-8 18-15c0-5-3-9-6-9H20z" fill="#0077b6"/>
                         <circle cx="28" cy="16" r="2" fill="#ffffff"/>
                         <circle cx="36" cy="16" r="2" fill="#ffffff"/>
                         <path d="M29 22q3 3 6 0" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
-                        <!-- Símbolo Masculino -->
                         <circle cx="48" cy="14" r="5" stroke="#00b4d8" stroke-width="2.5" fill="none"/>
                         <line x1="52" y1="10" x2="59" y2="3" stroke="#00b4d8" stroke-width="2.5" stroke-linecap="round"/>
                         <polyline points="54,3 59,3 59,8" stroke="#00b4d8" stroke-width="2.5" stroke-linecap="round"/>
@@ -84,13 +83,12 @@
             <div class="sex-card girl-card">
                 <div class="sex-icon-wrap">
                     <!-- Icono Neonato Niña Rosa -->
-                    <svg viewBox="0 0 64 64" width="38" height="38" fill="none">
+                    <svg viewBox="0 0 64 64" width="40" height="40" fill="none">
                         <circle cx="32" cy="18" r="12" fill="#f72585"/>
                         <path d="M20 32c-3 0-6 4-6 9 0 7 6 15 18 15s18-8 18-15c0-5-3-9-6-9H20z" fill="#b5179e"/>
                         <circle cx="28" cy="16" r="2" fill="#ffffff"/>
                         <circle cx="36" cy="16" r="2" fill="#ffffff"/>
                         <path d="M29 22q3 3 6 0" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
-                        <!-- Símbolo Femenino -->
                         <circle cx="48" cy="12" r="5" stroke="#f72585" stroke-width="2.5" fill="none"/>
                         <line x1="48" y1="17" x2="48" y2="25" stroke="#f72585" stroke-width="2.5" stroke-linecap="round"/>
                         <line x1="44" y1="21" x2="52" y2="21" stroke="#f72585" stroke-width="2.5" stroke-linecap="round"/>
@@ -105,7 +103,7 @@
 
             <div class="sex-card cesarea-card">
                 <div class="sex-icon-wrap">
-                    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="#7209b7" stroke-width="2.2">
+                    <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#7209b7" stroke-width="2.2">
                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                         <polyline points="14 2 14 8 20 8"></polyline>
                         <line x1="12" y1="18" x2="12" y2="12"></line>
@@ -121,7 +119,7 @@
 
             <div class="sex-card weight-card">
                 <div class="sex-icon-wrap">
-                    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="#06d6a0" stroke-width="2.2">
+                    <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#06d6a0" stroke-width="2.2">
                         <circle cx="12" cy="12" r="10"></circle>
                         <polyline points="12 6 12 12 16 14"></polyline>
                     </svg>
@@ -134,57 +132,25 @@
             </div>
         </section>
 
-        <!-- SECCIÓN HERO INFOGRÁFICA (Silueta Materna + Hitos 01-04 + Tarjetas Temáticas A-D) -->
+        <!-- SECCIÓN HERO INFOGRÁFICA (Ilustración Materno-Neonatal + Hitos 01-04 + Tarjetas A-D) -->
         <section class="infographic-hero-container">
-            <!-- 1. Columna Izquierda: Silueta Materna y Feto en Vector SVG -->
+            <!-- 1. Columna Izquierda: Ilustración Materno-Neonatal de Alta Definición -->
             <div class="hero-maternal-art">
-                <div class="maternal-silhouette-wrapper">
-                    <!-- SVG Silueta Materna y Gestacional de Alta Calidad -->
-                    <svg viewBox="0 0 280 400" class="maternal-svg" fill="none">
-                        <defs>
-                            <linearGradient id="matGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#4a154b"/>
-                                <stop offset="50%" stop-color="#3a0ca3"/>
-                                <stop offset="100%" stop-color="#4361ee"/>
-                            </linearGradient>
-                            <linearGradient id="fetusGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#ffffff"/>
-                                <stop offset="100%" stop-color="#f3f4f6"/>
-                            </linearGradient>
-                            <filter id="glowFetus" x="-20%" y="-20%" width="140%" height="140%">
-                                <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#00b4d8" flood-opacity="0.6"/>
-                            </filter>
-                        </defs>
-                        <!-- Silueta Gestante estilizada -->
-                        <path d="M120 30 C135 30 145 42 145 58 C145 74 135 85 120 85 C115 85 108 82 104 78 C95 88 85 105 80 130 C72 170 70 210 50 250 C38 274 25 310 25 360 L25 400 L110 400 C115 370 125 340 140 310 C165 260 185 220 185 170 C185 125 155 95 138 88 C142 80 145 70 145 58 C145 35 130 30 120 30 Z" fill="url(#matGrad)"/>
-                        
-                        <!-- Vientre Materno con Feto Iluminado -->
-                        <ellipse cx="145" cy="225" rx="55" ry="65" fill="#240046" stroke="#f72585" stroke-width="3.5" filter="url(#glowFetus)"/>
-                        
-                        <!-- Ilustración del Feto / Neonato en vientre -->
-                        <g transform="translate(112, 185) scale(0.65)">
-                            <path d="M45 10 C58 10 68 20 68 33 C68 44 60 52 48 55 C46 62 48 70 54 75 C60 80 68 85 70 95 C72 108 60 118 45 118 C32 118 22 108 22 95 C22 82 32 75 38 68 C35 62 30 55 30 45 C30 25 35 10 45 10 Z" fill="url(#fetusGrad)"/>
-                            <circle cx="56" cy="28" r="3.5" fill="#3a0ca3"/>
-                            <path d="M38 78 C25 85 18 98 22 110 C25 120 40 125 55 122" stroke="#ffffff" stroke-width="5" stroke-linecap="round" fill="none"/>
-                        </g>
-
-                        <!-- Onda de Pulso Cardíaco Neonatal -->
-                        <path d="M95 295 L115 295 L122 280 L130 310 L138 275 L146 305 L152 295 L175 295" stroke="#00b4d8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </div>
-                <div class="maternal-label">
-                    <strong>Salud Materno-Neonatal</strong>
-                    <span>Vigilancia Epidemiológica 2015-2025</span>
+                <div class="maternal-image-card">
+                    <img src="maternal_infographic.jpg" alt="Vigilancia Materno Neonatal" class="maternal-real-img">
+                    <div class="image-overlay-badge">
+                        <span>Salud Materno-Neonatal</span>
+                    </div>
                 </div>
             </div>
 
-            <!-- 2. Columna Central: Puntos de Infografía Conectados 01 - 04 -->
+            <!-- 2. Columna Central: Hitos Clave 01 - 04 -->
             <div class="hero-steps-timeline">
                 <div class="infographic-step-card step-01">
                     <div class="step-badge-num num-01">01</div>
                     <div class="step-content-box">
                         <h4 class="step-title gold-title">Pico Máximo de Natalidad (2018)</h4>
-                        <p class="step-desc">Se registró el récord histórico con <strong>493,990 nacimientos</strong> en el Perú, alcanzando la mayor cobertura nacional del Certificado de Nacido Vivo (CNV).</p>
+                        <p class="step-desc">Se registró el récord histórico con <strong>493,990 nacimientos</strong> en el Perú, alcanzando la máxima cobertura nacional del Certificado de Nacido Vivo (CNV).</p>
                     </div>
                 </div>
 
@@ -192,7 +158,7 @@
                     <div class="step-badge-num num-02">02</div>
                     <div class="step-content-box">
                         <h4 class="step-title orange-title">Transición Demográfica Acelerada</h4>
-                        <p class="step-desc">A partir de 2019 se evidencia un declive continuo, profundizado por la pandemia 2020 y cayendo a <strong>376,786 en 2025 (-23.73% acumulado)</strong>.</p>
+                        <p class="step-desc">A partir de 2019 se evidencia un declive continuo, profundizado en 2020 y descendiendo hasta <strong>376,786 partos en 2025 (-23.73% acumulado)</strong>.</p>
                     </div>
                 </div>
 
@@ -200,7 +166,7 @@
                     <div class="step-badge-num num-03">03</div>
                     <div class="step-content-box">
                         <h4 class="step-title cyan-title">Alerta por Exceso de Cesáreas</h4>
-                        <p class="step-desc">La tasa de intervenciones quirúrgicas creció ininterrumpidamente hasta <strong>39.90% en 2025</strong>, superando en 2.6 veces el límite seguro de la OMS (15%).</p>
+                        <p class="step-desc">La tasa de cesáreas creció progresivamente hasta <strong>39.90% en 2025</strong>, superando en 2.6 veces el límite recomendado por la OMS (15%).</p>
                     </div>
                 </div>
 
@@ -208,18 +174,18 @@
                     <div class="step-badge-num num-04">04</div>
                     <div class="step-content-box">
                         <h4 class="step-title magenta-title">Factores de Riesgo Neonatal</h4>
-                        <p class="step-desc">El <strong>7.3%</strong> de recién nacidos presentó bajo peso (<2,500g) y el <strong>8.9%</strong> nació de madres adolescentes (<18 años), focalizado en Huancavelica y Loreto.</p>
+                        <p class="step-desc">El <strong>7.3%</strong> de neonatos registró bajo peso (<2,500g) y el <strong>8.9%</strong> nació de madres adolescentes (<18 años), focalizado en Huancavelica y Loreto.</p>
                     </div>
                 </div>
             </div>
 
-            <!-- 3. Columna Derecha: Tarjetas de Indicadores Estratégicos A - D -->
+            <!-- 3. Columna Derecha: Tarjetas de Indicadores Sanitarios A - D -->
             <div class="hero-feature-cards">
                 <div class="feat-card feat-a">
                     <div class="feat-letter letter-a">A</div>
                     <div class="feat-body">
                         <h4 class="feat-title">Aseguramiento Público SIS</h4>
-                        <p class="feat-desc">El <strong>70.08% de los partos</strong> (3.43 millones) fueron financiados por el Seguro Integral de Salud, garantizando gratuidad a poblaciones vulnerables.</p>
+                        <p class="feat-desc">El <strong>70.08% de los nacimientos</strong> (3.43 millones) fueron financiados por el Seguro Integral de Salud, garantizando atención gratuita.</p>
                     </div>
                 </div>
 
@@ -227,7 +193,7 @@
                     <div class="feat-letter letter-b">B</div>
                     <div class="feat-body">
                         <h4 class="feat-title">Estacionalidad Anual</h4>
-                        <p class="feat-desc"><strong>Marzo (436,279) y Mayo (421,288)</strong> concentran el mayor número de nacimientos del año; mientras que <strong>Noviembre (384,140)</strong> es el mes más bajo.</p>
+                        <p class="feat-desc"><strong>Marzo (436,279) y Mayo (421,288)</strong> concentran el mayor número de nacimientos; mientras que <strong>Noviembre (384,140)</strong> es el mes más bajo.</p>
                     </div>
                 </div>
 
@@ -243,7 +209,7 @@
                     <div class="feat-letter letter-d">D</div>
                     <div class="feat-body">
                         <h4 class="feat-title">Proyección Quinquenal (ML)</h4>
-                        <p class="feat-desc">El modelo predictivo de regresión lineal proyecta un descenso a <strong>375,865 nacimientos hacia el año 2030</strong> ($\hat{Y} = -6,998.95 \cdot X + 14,583,724$).</p>
+                        <p class="feat-desc">El modelo predictivo de regresión lineal proyecta un descenso continuo a <strong>375,865 nacimientos para el año 2030</strong> (Ecuación: Y = -6,998.95 * X + 14,583,724).</p>
                     </div>
                 </div>
             </div>
@@ -451,14 +417,14 @@
             </div>
         </main>
 
-        <!-- Pie de Página Institucional -->
+        <!-- Pie de Página Institucional Profesional -->
         <footer class="app-footer">
             <div class="footer-left">
-                <strong>Escuela Superior la Pontificia</strong> | Carrera: Ingeniería de Sistemas de Información (Ciclo: VIII – B)
-                <br>Curso: Gestión de Base De Datos / Big Data | Docente: Ing. Erick Jhonatan Palomino Ayala
+                <strong>Ministerio de Salud del Perú (MINSA) & RENIEC</strong> | Plataforma Nacional de Datos Abiertos
+                <br>Dirección General de Epidemiología y OTI • Sistema de Inteligencia Sanitaria Big Data CNV Perú
             </div>
             <div class="footer-right">
-                Integrantes: Curahua Morales, Any Miluska | Ayacucho, 2026
+                Registros Oficiales 2015 – 2025 | Modelo Predictivo 2026 – 2030
             </div>
         </footer>
     </div>

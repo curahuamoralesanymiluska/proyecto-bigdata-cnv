@@ -1,12 +1,11 @@
 /* ==========================================================================================
-   PROYECTO ACADÉMICO: Big Data con Datos Abiertos Reales (MINSA / RENIEC - CNV Perú)
-   CURSO: Gestión de Base de Datos / Big Data | Escuela Superior la Pontificia
+   SISTEMA DE VIGILANCIA Y ANALÍTICA DE NATALIDAD (CNV PERÚ - MINSA / RENIEC)
    ARCHIVO: styles.css
-   DESCRIPCIÓN: Estilos CSS Vanilla para el Dashboard Infográfico de Salud Materno-Neonatal
+   DESCRIPCIÓN: Estilos CSS Vanilla para el Dashboard Infográfico Ejecutivo y Profesional
    ========================================================================================== */
 
 :root {
-    /* Paleta Infográfica Inspirada en la Imagen de Referencia */
+    /* Paleta Infográfica Profesional de Salud Pública */
     --color-bg-body: #f8faff;
     --color-surface: #ffffff;
     --color-card-bg: #ffffff;
@@ -33,9 +32,9 @@
     --radius-md: 14px;
     --radius-lg: 20px;
     --radius-pill: 50px;
-    --shadow-subtle: 0 4px 20px -2px rgba(58, 12, 163, 0.08), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
-    --shadow-card: 0 10px 30px -5px rgba(58, 12, 163, 0.12), 0 4px 10px -2px rgba(0, 0, 0, 0.05);
-    --shadow-hover: 0 16px 36px -6px rgba(247, 37, 133, 0.18), 0 6px 16px -2px rgba(0, 180, 216, 0.15);
+    --shadow-subtle: 0 4px 20px -2px rgba(58, 12, 163, 0.06), 0 2px 6px -1px rgba(0, 0, 0, 0.03);
+    --shadow-card: 0 10px 30px -5px rgba(58, 12, 163, 0.08), 0 4px 10px -2px rgba(0, 0, 0, 0.04);
+    --shadow-hover: 0 16px 36px -6px rgba(247, 37, 133, 0.15), 0 6px 16px -2px rgba(0, 180, 216, 0.12);
     --transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -49,9 +48,9 @@ body {
     font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background-color: var(--color-bg-body);
     background-image: 
-        radial-gradient(at 0% 0%, rgba(247, 37, 133, 0.05) 0px, transparent 50%),
-        radial-gradient(at 100% 0%, rgba(0, 180, 216, 0.06) 0px, transparent 50%),
-        radial-gradient(at 50% 100%, rgba(58, 12, 163, 0.04) 0px, transparent 50%);
+        radial-gradient(at 0% 0%, rgba(247, 37, 133, 0.04) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(0, 180, 216, 0.05) 0px, transparent 50%),
+        radial-gradient(at 50% 100%, rgba(58, 12, 163, 0.03) 0px, transparent 50%);
     color: var(--text-primary);
     line-height: 1.5;
     min-height: 100vh;
@@ -122,7 +121,7 @@ body {
     font-weight: 600;
 }
 
-/* Header Infográfico */
+/* Header Profesional */
 .top-header {
     background: var(--color-surface);
     border: 1px solid var(--color-card-border);
@@ -151,11 +150,12 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
 }
 
 .header-title {
     font-family: 'Outfit', sans-serif;
-    font-size: 1.7rem;
+    font-size: 1.6rem;
     font-weight: 800;
     color: var(--color-royal-purple);
     letter-spacing: -0.02em;
@@ -170,7 +170,7 @@ body {
 
 .header-subtitle {
     color: var(--text-secondary);
-    font-size: 0.88rem;
+    font-size: 0.86rem;
     font-weight: 500;
     margin-top: 4px;
 }
@@ -184,7 +184,7 @@ body {
 .badge-pill {
     padding: 6px 16px;
     border-radius: var(--radius-pill);
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.03em;
@@ -194,10 +194,10 @@ body {
 .badge-pill.bg-cyan   { background: rgba(0, 180, 216, 0.08); color: var(--color-dark-blue); border: 1px solid rgba(0, 180, 216, 0.25); }
 .badge-pill.bg-gold   { background: rgba(255, 183, 3, 0.15); color: #d97706; border: 1px solid rgba(255, 183, 3, 0.4); }
 
-/* Fila Superior de Estadísticas por Sexo y Métricas */
+/* Fila Superior de Estadísticas por Sexo */
 .sex-stats-banner {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 18px;
 }
 
@@ -208,13 +208,13 @@ body {
     padding: 18px 22px;
     display: flex;
     align-items: center;
-    gap: 18px;
+    gap: 16px;
     box-shadow: var(--shadow-subtle);
     transition: var(--transition);
 }
 
 .sex-card:hover {
-    transform: translateY(-4px);
+    transform: translateY(-3px);
     box-shadow: var(--shadow-hover);
 }
 
@@ -233,7 +233,7 @@ body {
 }
 
 .sex-label {
-    font-size: 0.78rem;
+    font-size: 0.76rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.04em;
@@ -242,7 +242,7 @@ body {
 
 .sex-pct {
     font-family: 'Outfit', sans-serif;
-    font-size: 1.8rem;
+    font-size: 1.75rem;
     font-weight: 800;
     line-height: 1.1;
     margin: 2px 0;
@@ -254,7 +254,7 @@ body {
 .green-color  { color: var(--color-emerald); }
 
 .sex-sub {
-    font-size: 0.76rem;
+    font-size: 0.75rem;
     color: var(--text-muted);
     font-weight: 600;
 }
@@ -263,16 +263,16 @@ body {
     color: #e11d48;
 }
 
-/* SECCIÓN HERO INFOGRÁFICA (Silueta Materna + Hitos 01-04 + Tarjetas Temáticas A-D) */
+/* SECCIÓN HERO INFOGRÁFICA (Ilustración + Hitos 01-04 + Tarjetas A-D) */
 .infographic-hero-container {
     background: var(--color-surface);
     border: 1px solid var(--color-card-border);
     border-radius: var(--radius-lg);
-    padding: 32px 28px;
+    padding: 30px 26px;
     box-shadow: var(--shadow-card);
     display: grid;
     grid-template-columns: 280px 1.4fr 1.2fr;
-    gap: 28px;
+    gap: 26px;
     align-items: center;
 }
 
@@ -291,13 +291,14 @@ body {
 @media (max-width: 768px) {
     .infographic-hero-container {
         grid-template-columns: 1fr;
+        padding: 20px 16px;
     }
     .hero-maternal-art {
         grid-column: span 1;
     }
 }
 
-/* Columna 1: Arte Silueta Materna */
+/* Columna 1: Tarjeta con Imagen Materna Real de Alta Calidad */
 .hero-maternal-art {
     display: flex;
     flex-direction: column;
@@ -305,60 +306,63 @@ body {
     justify-content: center;
 }
 
-.maternal-silhouette-wrapper {
-    width: 240px;
-    height: 330px;
+.maternal-image-card {
+    width: 100%;
+    max-width: 250px;
+    height: 340px;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 10px 25px rgba(58, 12, 163, 0.12);
+    border: 2px solid rgba(247, 37, 133, 0.2);
+    background: #ffffff;
     display: flex;
     align-items: center;
     justify-content: center;
-    position: relative;
-    filter: drop-shadow(0 15px 25px rgba(58, 12, 163, 0.15));
 }
 
-.maternal-svg {
+.maternal-real-img {
     width: 100%;
     height: 100%;
+    object-fit: cover;
+    object-position: center top;
     transition: var(--transition);
 }
 
-.maternal-svg:hover {
-    transform: scale(1.03);
+.maternal-image-card:hover .maternal-real-img {
+    transform: scale(1.04);
 }
 
-.maternal-label {
-    text-align: center;
-    margin-top: 10px;
-}
-
-.maternal-label strong {
-    display: block;
-    font-family: 'Outfit', sans-serif;
-    color: var(--color-royal-purple);
-    font-size: 1rem;
-}
-
-.maternal-label span {
-    font-size: 0.78rem;
-    color: var(--text-muted);
-    font-weight: 600;
+.image-overlay-badge {
+    position: absolute;
+    bottom: 12px;
+    background: rgba(36, 0, 70, 0.85);
+    backdrop-filter: blur(6px);
+    color: #ffffff;
+    padding: 6px 14px;
+    border-radius: var(--radius-pill);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 /* Columna 2: Hitos 01 - 04 */
 .hero-steps-timeline {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 14px;
 }
 
 .infographic-step-card {
     background: #f8fafc;
     border: 1px solid var(--color-card-border);
     border-radius: var(--radius-md);
-    padding: 14px 18px;
+    padding: 12px 16px;
     display: flex;
     align-items: center;
     gap: 16px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
     transition: var(--transition);
 }
 
@@ -369,18 +373,18 @@ body {
 }
 
 .step-badge-num {
-    width: 44px;
-    height: 44px;
+    width: 42px;
+    height: 42px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-family: 'Outfit', sans-serif;
-    font-size: 1.2rem;
+    font-size: 1.15rem;
     font-weight: 800;
     color: #ffffff;
     flex-shrink: 0;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .num-01 { background: linear-gradient(135deg, #ffb703, #fb8500); }
@@ -394,9 +398,9 @@ body {
 
 .step-title {
     font-family: 'Outfit', sans-serif;
-    font-size: 0.95rem;
+    font-size: 0.92rem;
     font-weight: 700;
-    margin-bottom: 3px;
+    margin-bottom: 2px;
 }
 
 .gold-title    { color: #d97706; }
@@ -405,7 +409,7 @@ body {
 .magenta-title { color: #be185d; }
 
 .step-desc {
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     color: var(--text-secondary);
     line-height: 1.35;
 }
@@ -414,18 +418,18 @@ body {
 .hero-feature-cards {
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 12px;
 }
 
 .feat-card {
     background: #ffffff;
     border: 1px solid var(--color-card-border);
     border-radius: var(--radius-md);
-    padding: 12px 16px;
+    padding: 12px 14px;
     display: flex;
     align-items: center;
     gap: 14px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
     transition: var(--transition);
 }
 
@@ -435,15 +439,15 @@ body {
 }
 
 .feat-letter {
-    width: 36px;
-    height: 36px;
+    width: 34px;
+    height: 34px;
     border-radius: var(--radius-sm);
     display: flex;
     align-items: center;
     justify-content: center;
     font-family: 'Outfit', sans-serif;
     font-weight: 800;
-    font-size: 1rem;
+    font-size: 0.95rem;
     flex-shrink: 0;
 }
 
@@ -454,14 +458,14 @@ body {
 
 .feat-title {
     font-family: 'Outfit', sans-serif;
-    font-size: 0.9rem;
+    font-size: 0.88rem;
     font-weight: 700;
     color: var(--color-royal-purple);
     margin-bottom: 2px;
 }
 
 .feat-desc {
-    font-size: 0.78rem;
+    font-size: 0.76rem;
     color: var(--text-secondary);
     line-height: 1.3;
 }
@@ -471,14 +475,14 @@ body {
     background: var(--color-surface);
     border: 1px solid var(--color-card-border);
     border-radius: var(--radius-md);
-    padding: 20px 24px;
+    padding: 18px 24px;
     box-shadow: var(--shadow-subtle);
 }
 
 .filters-wrapper {
     display: flex;
     align-items: flex-end;
-    gap: 20px;
+    gap: 18px;
     flex-wrap: wrap;
 }
 
@@ -487,7 +491,7 @@ body {
     flex-direction: column;
     gap: 6px;
     flex: 1;
-    min-width: 220px;
+    min-width: 200px;
 }
 
 .filter-label {
@@ -495,7 +499,7 @@ body {
     align-items: center;
     gap: 6px;
     color: var(--color-royal-purple);
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.03em;
@@ -507,7 +511,7 @@ body {
     color: var(--text-primary);
     padding: 10px 14px;
     border-radius: var(--radius-sm);
-    font-size: 0.9rem;
+    font-size: 0.88rem;
     font-family: inherit;
     font-weight: 600;
     outline: none;
@@ -526,14 +530,14 @@ body {
     color: var(--color-royal-purple);
     padding: 10px 18px;
     border-radius: var(--radius-sm);
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     font-weight: 700;
     display: flex;
     align-items: center;
     gap: 8px;
     cursor: pointer;
     transition: var(--transition);
-    height: 44px;
+    height: 42px;
 }
 
 .btn-reset:hover {
@@ -586,14 +590,14 @@ body {
 
 .card-title {
     font-family: 'Outfit', sans-serif;
-    font-size: 1.2rem;
+    font-size: 1.18rem;
     font-weight: 800;
     color: var(--color-royal-purple);
 }
 
 .card-subtitle {
     color: var(--text-secondary);
-    font-size: 0.82rem;
+    font-size: 0.8rem;
     margin-top: 2px;
     font-weight: 500;
 }
@@ -602,7 +606,7 @@ body {
     display: flex;
     align-items: center;
     gap: 16px;
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     color: var(--text-secondary);
     font-weight: 600;
 }
